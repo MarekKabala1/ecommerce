@@ -1,8 +1,17 @@
-import NextAuth from 'next-auth';
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { Adapter } from 'next-auth/adapters';
 
-export const authOptions = {
-	// Configure one or more authentication providers
+import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { PrismaClient } from "@prisma/client";
+
+const authHandler: NextApiHandler = (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res, authOption);
+export default authHandler;
+
+const prisma = new PrismaClient();
+
+export const authOption: NextAuthOptions = {
 	providers: [
 		GoogleProvider({
 			clientId: process.env.GOOGLE_CLIENT_ID || '',
@@ -10,6 +19,6 @@ export const authOptions = {
 		}),
 		// ...add more providers here
 	],
+	adapter: PrismaAdapter(prisma) as Adapter,
 };
 
-export default NextAuth(authOptions);
