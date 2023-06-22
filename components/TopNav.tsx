@@ -1,13 +1,14 @@
 import { useSession, signIn, signOut } from 'next-auth/react';
+import Link from 'next/link';
 
 const TopNav = () => {
 	const { data: session, status } = useSession();
 	// console.log(session, status);
 	return session ? (
-		<nav className=' bg-blue-500 h-max w-screen'>
-			<div className='text-yellow-50 text-center'>Ecommerce Admin Page</div>
-			<ul className='flex items-center justify-between px-4 pb-4 text-yellow-50'>
-				<div className='flex gap-2'>
+		<nav className=' bg-blue-500 w-screen'>
+			<h1 className='text-yellow-50 text-center'>Ecommerce Admin Page</h1>
+			<aside className='flex items-center justify-between px-4 pb-4 text-yellow-50'>
+				<Link href={'/'} className='flex gap-2'>
 					<svg
 						xmlns='http://www.w3.org/2000/svg'
 						fill='none'
@@ -23,13 +24,13 @@ const TopNav = () => {
 						Admin:
 					</svg>
 					<div>{session.user?.name}</div>
-				</div>
+				</Link>
 				<button
 					onClick={() => signOut()}
 					className='bg-white rounded-lg p-1 px-4 text-black '>
 					Sign out
 				</button>
-			</ul>
+			</aside>
 		</nav>
 	) : (
 		<div className=' bg-blue-900 flex h-screen w-screen items-center justify-center'>
