@@ -1,29 +1,20 @@
-import SideNav from '@/components/SideNav';
-import TopNav from '@/components/TopNav';
-import { useSession, signIn } from 'next-auth/react';
 import { PropsWithChildren } from 'react';
+import { useSession, signIn } from 'next-auth/react';
+import TopNav from '@/components/TopNav';
+import SideNav from '@/components/SideNav';
 
 export default function Layout({ children }: PropsWithChildren) {
 	const { data: session } = useSession();
-	return session ? (
-		<div className='bg-blue-900 flex flex-col h-screen'>
-			<TopNav />
-			<div className='flex h-full '>
-				<SideNav />
-				<section className='bg-yellow-50 flex-grow mt-4 mr-4 mb-4 p-2'>
-					{children}
-				</section>
+	if (session)
+		return (
+			<div className='bg-linear-gradient flex flex-col h-screen'>
+				<TopNav />
+				<div className='flex h-full '>
+					<SideNav />
+					<section className='bg-yellow-50 text-blue-800 flex-grow mt-4 mr-4 mb-4 p-2'>
+						{children}
+					</section>
+				</div>
 			</div>
-		</div>
-	) : (
-		<div className=' bg-blue-900 flex h-screen w-screen items-center justify-center'>
-			<button
-				onClick={() => {
-					signIn('google');
-				}}
-				className='bg-white rounded-lg p-2 px-4 '>
-				Log in with Google
-			</button>
-		</div>
-	);
+		);
 }

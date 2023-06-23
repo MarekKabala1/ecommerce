@@ -1,12 +1,15 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
 
 const Nav = () => {
-	const inActiveLink = 'flex gap-2 mb-2 tracking-widest';
-	const activeLink = `${inActiveLink} bg-white text-black p-1 `;
+	const inActiveLink = 'flex gap-2 mb-2 tracking-widest w-28 text-blue-800';
+	const activeLink = `${inActiveLink} bg-white text-blue-900 text-bold p-1 w-28 rounded-l-md `;
+	const router = useRouter();
+	const { pathname } = router;
 	return (
-		<nav className='text-yellow-50 p-4 pr-0 text-xs '>
-			<Link href={'/'} className={activeLink}>
+		<nav className='text-blue-800 p-4 pr-0 text-xs  '>
+			<Link href={'/'} className={pathname === '/' ? activeLink : inActiveLink}>
 				<svg
 					xmlns='http://www.w3.org/2000/svg'
 					fill='none'
@@ -22,7 +25,9 @@ const Nav = () => {
 				</svg>
 				Dashboard
 			</Link>
-			<Link href={'/products'} className={inActiveLink}>
+			<Link
+				href={'/products'}
+				className={pathname.includes('/products') ? activeLink : inActiveLink}>
 				<svg
 					xmlns='http://www.w3.org/2000/svg'
 					fill='none'
@@ -38,7 +43,9 @@ const Nav = () => {
 				</svg>
 				Products
 			</Link>
-			<Link href={'/orders'} className={inActiveLink}>
+			<Link
+				href={'/orders'}
+				className={pathname.includes('/orders') ? activeLink : inActiveLink}>
 				<svg
 					xmlns='http://www.w3.org/2000/svg'
 					fill='none'
@@ -54,7 +61,9 @@ const Nav = () => {
 				</svg>
 				Orders
 			</Link>
-			<Link href={'/settings'} className={inActiveLink}>
+			<Link
+				href={'/settings'}
+				className={pathname.includes('/settings') ? activeLink : inActiveLink}>
 				<svg
 					xmlns='http://www.w3.org/2000/svg'
 					fill='none'
