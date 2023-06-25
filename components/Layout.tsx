@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { useSession, signIn } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import TopNav from '@/components/TopNav';
 import SideNav from '@/components/SideNav';
 
@@ -11,7 +11,7 @@ export default function Layout({ children }: PropsWithChildren) {
 				<TopNav />
 				<div className='flex h-full '>
 					<SideNav />
-					<section className='bg-yellow-50 text-blue-800 flex-grow mt-4 mr-4 mb-4 p-2'>
+					<section className='bg-yellow-50 w-full text-blue-800 flex-grow mt-4 mr-4 mb-4 p-4'>
 						{children}
 					</section>
 				</div>

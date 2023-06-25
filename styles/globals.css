@@ -8,3 +8,28 @@
 
 	--bg_lightsGradient: to top, #d1c8d3, #c5c0d3, #b3bbd3, #9db6d1, #83b2cb;
 }
+
+.btn-primary {
+	@apply bg-gray-300 border border-gray-400 rounded-lg p-0.5 px-5 text-blue-800;
+}
+
+label {
+	@apply px-1;
+}
+
+input,
+textarea {
+	@apply bg-white border text-blue-600 border-gray-300 p-1 rounded-md w-full mb-2;
+}
+
+input:focus,
+textarea:focus {
+	@apply bg-white border outline-none border-blue-400 p-1 rounded-md w-full;
+}
+input::placeholder,
+textarea::placeholder {
+	@apply text-blue-600 text-xs p-1 opacity-30;
+}
+h2 {
+	@apply text-center text-blue-800 text-xl mb-2;
+}
