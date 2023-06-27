@@ -4,13 +4,15 @@
 
 :root {
 	--bg_linearGradient: to top, #306ed4, #297dd6, #348bd5, #4998d2, #61a4cf,
-		#78aad0, #8cb0d1, #9db6d1, #aeb9d3, #bdbdd3, #c8c2d3, #d1c8d3;
+		#78aad0, #8cb0d1, #9db6d1, #acb8d2, #bdbdd3, #c8c2d3, #d2c9d4;
 
 	--bg_lightsGradient: to top, #d1c8d3, #c5c0d3, #b3bbd3, #9db6d1, #83b2cb;
+	--bg_button: rgb(172, 184, 210);
 }
-
+@layer {
+}
 .btn-primary {
-	@apply bg-gray-300 border border-gray-400 rounded-lg p-0.5 px-5 text-blue-800;
+	@apply bg-slate-200 border border-gray-400 rounded-lg p-1 px-5 text-blue-800;
 }
 
 label {
@@ -18,7 +20,8 @@ label {
 }
 
 input,
-textarea {
+textarea,
+select {
 	@apply bg-white border text-blue-600 border-gray-300 p-1 rounded-md w-full mb-2;
 }
 
