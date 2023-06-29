@@ -4,7 +4,7 @@ import React from 'react';
 const Orders = () => {
 	return (
 		<Layout>
-			<h2>Orders</h2>
+			<h1 className='header'>Orders</h1>
 		</Layout>
 	);
 };

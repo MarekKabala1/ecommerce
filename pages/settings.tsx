@@ -4,7 +4,7 @@ import React from 'react';
 const Settings = () => {
 	return (
 		<Layout>
-			<h2>Settings</h2>
+			<h1 className='header'>Settings</h1>
 		</Layout>
 	);
 };

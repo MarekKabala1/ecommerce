@@ -5,9 +5,9 @@ export default function Home() {
 	const { data: session } = useSession();
 	return session ? (
 		<Layout>
-			<h2 className='text-center'>
+			<h1 className='header'>
 				Hello, <b>{session.user?.name}</b>
-			</h2>
+			</h1>
 		</Layout>
 	) : (
 		<div className=' bg-linear-gradient flex h-screen w-screen items-center justify-center'>
