@@ -5,7 +5,7 @@ const TopNav = () => {
 	const { data: session, status } = useSession();
 	if (session)
 		return (
-			<nav className=' bg-transparent w-screen'>
+			<nav className=' bg-transparent w-full'>
 				<h1 className='text-blue-700 text-center'>
 					<b>Ecommerce Admin Page</b>{' '}
 				</h1>
