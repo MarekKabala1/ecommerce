@@ -1,13 +1,20 @@
-import axios from 'axios';
 import Image from 'next/image';
 import React, { SyntheticEvent, useState } from 'react';
-// import { uploadImages } from '@/pages/api/cloudinaryUpload';
+
+interface productData {
+	productName: string;
+	description: string;
+	category: string;
+	imageUrl: string;
+	price: number;
+}
 
 const ProductForm = () => {
 	const [productName, setProductName] = useState('');
-	const [price, setPrice] = useState('');
+	const [price, setPrice] = useState<number>(0);
 	const [description, setDescription] = useState('');
 	const [category, setCategory] = useState('---Choose a category---');
+	const [imageUrl, setImageUrl] = useState('');
 	const [image, setImage] = useState('');
 	const [imageState, setImageState] = useState('');
 
@@ -52,19 +59,46 @@ const ProductForm = () => {
 
 	const SubmitProduct = async (e: SyntheticEvent) => {
 		e.preventDefault();
-		// const data = { productName, price, description, category, image };
-		// // console.log(data);
-		// setDescription('');
-		// setPrice('');
-		// setProductName('');
-		// setCategory('---Choose a category---');
+		const productData: productData = {
+			productName,
+			price,
+			description,
+			category,
+			imageUrl,
+		};
+		// console.log(data);
+		setDescription('');
+		setPrice(0);
+		setProductName('');
+		setCategory('---Choose a category---');
 		try {
-			await fetch('/api/upload', {
+			const response = await fetch('/api/uploadImage', {
 				method: 'POST',
 				body: JSON.stringify({ data: image }),
 				headers: { 'Content-Type': 'application/json' },
 			});
-			setImage('');
+			if (response.ok) {
+				const data = await response.json();
+				const imgUrl = data.imageUrl;
+				setImageUrl(imgUrl);
+				console.log(imgUrl);
+
+				if (setImageUrl('') === imgUrl) {
+					try {
+						const productResponse = await fetch('api/upload/product', {
+							method: 'POST',
+							body: JSON.stringify(productData),
+							headers: { 'Content-Type': 'application/json' },
+						});
+						if (productResponse.ok) {
+							const data = await productResponse.json();
+							console.log(data);
+						}
+					} catch (err) {
+						console.error(err);
+					}
+				}
+			}
 		} catch (err) {
 			console.error(err);
 		}
@@ -76,9 +110,10 @@ const ProductForm = () => {
 				<b>Categories:</b>
 			</label>
 			<select
+				className='text-center'
 				name='category'
 				id='category'
-				className='text-center'
+				required
 				onChange={(e) => setCategory(e.target.value)}>
 				{categories.map((category) => (
 					<option key={category} value={category}>
@@ -94,6 +129,7 @@ const ProductForm = () => {
 				placeholder='Product Name'
 				id='product'
 				name='product'
+				required
 				value={productName}
 				onChange={(e) => setProductName(e.target.value)}
 			/>
@@ -104,6 +140,7 @@ const ProductForm = () => {
 				placeholder='Description'
 				id='description'
 				name='description'
+				required
 				value={description}
 				onChange={(e) => setDescription(e.target.value)}
 			/>
@@ -116,8 +153,10 @@ const ProductForm = () => {
 				placeholder='Price'
 				id='price'
 				name='price'
+				required
+				step={0.1}
 				value={price}
-				onChange={(e) => setPrice(e.target.value)}
+				onChange={(e) => setPrice(parseInt(e.target.value))}
 			/>
 			<div className='flex justify-between mt-2'>
 				<label className='btn-primary max-w-fit px-4 cursor-pointer text-center flex  items-center justify-center text-xs gap-1 '>
@@ -138,6 +177,7 @@ const ProductForm = () => {
 					<input
 						className='hidden'
 						type='file'
+						required
 						value={imageState}
 						onChange={handleImageInput}
 					/>
