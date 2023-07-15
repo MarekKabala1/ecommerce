@@ -17,7 +17,6 @@ export const authOption: NextAuthOptions = {
 			clientId: process.env.GOOGLE_CLIENT_ID || '',
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
 		}),
-		// ...add more providers here
 	],
 	adapter: PrismaAdapter(prisma) as Adapter,
 };

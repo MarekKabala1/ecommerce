@@ -1,15 +1,17 @@
 import Image from 'next/image';
-import React, { SyntheticEvent, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 
-interface productData {
-	productName: string;
-	description: string;
-	category: string;
-	imageUrl: string;
-	price: number;
+export interface productData {
+	id?: string;
+	productName?: string;
+	description?: string;
+	imageUrl?: string;
+	category?: string;
+	price?: number;
 }
 
 const ProductForm = () => {
+	const [id, setId] = useState('');
 	const [productName, setProductName] = useState('');
 	const [price, setPrice] = useState<number>(0);
 	const [description, setDescription] = useState('');
@@ -60,47 +62,51 @@ const ProductForm = () => {
 	const SubmitProduct = async (e: SyntheticEvent) => {
 		e.preventDefault();
 		const productData: productData = {
+			id,
 			productName,
-			price,
 			description,
-			category,
 			imageUrl,
+			category,
+			price,
 		};
-		// console.log(data);
-		setDescription('');
-		setPrice(0);
-		setProductName('');
-		setCategory('---Choose a category---');
 		try {
-			const response = await fetch('/api/uploadImage', {
+			const response = await fetch('/api/upload/image', {
 				method: 'POST',
 				body: JSON.stringify({ data: image }),
 				headers: { 'Content-Type': 'application/json' },
 			});
 			if (response.ok) {
 				const data = await response.json();
-				const imgUrl = data.imageUrl;
-				setImageUrl(imgUrl);
-				console.log(imgUrl);
 
-				if (setImageUrl('') === imgUrl) {
-					try {
-						const productResponse = await fetch('api/upload/product', {
-							method: 'POST',
-							body: JSON.stringify(productData),
-							headers: { 'Content-Type': 'application/json' },
-						});
-						if (productResponse.ok) {
-							const data = await productResponse.json();
-							console.log(data);
-						}
-					} catch (err) {
-						console.error(err);
-					}
+				const imgUrl = data.imageUrl;
+				let fullId = data.cludinary_id;
+				let id = fullId.slice(14);
+				setId(id);
+
+				setImageUrl(imgUrl as string);
+				productData.imageUrl = imgUrl as string;
+				productData.id = id;
+				console.log(imgUrl, id);
+
+				const productResponse = await fetch('/api/upload/product', {
+					method: 'POST',
+					body: JSON.stringify({ data: productData }),
+					headers: { 'Content-Type': 'application/json' },
+				});
+				if (productResponse.ok) {
+					const data = await productResponse.json();
+					console.log(data);
 				}
 			}
 		} catch (err) {
 			console.error(err);
+		} finally {
+			setId('');
+			setDescription('');
+			setPrice(0);
+			setProductName('');
+			setCategory('---Choose a category---');
+			setImage('');
 		}
 	};
 	return (
