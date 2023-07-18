@@ -36,3 +36,16 @@ textarea::placeholder {
 .header {
 	@apply text-center text-blue-800 text-xl mb-2;
 }
+table.basic {
+	@apply w-full bg-white rounded-sm shadow-md;
+}
+table.basic thead tr td,
+table.basic thead tr th {
+	@apply text-sm text-gray-600 uppercase border-b border-gray-200 px-4 py-2;
+}
+table.basic tr td {
+	@apply px-4 py-1;
+}
+table.basic a {
+	@apply px-4 rounded-sm inline-flex mx-1 items-center gap-1 text-sm py-1;
+}

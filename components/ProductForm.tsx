@@ -1,4 +1,6 @@
+import { redirect } from 'next/dist/server/api-utils';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import React, { SyntheticEvent, useEffect, useState } from 'react';
 
 export interface productData {
@@ -19,6 +21,8 @@ const ProductForm = () => {
 	const [imageUrl, setImageUrl] = useState('');
 	const [image, setImage] = useState('');
 	const [imageState, setImageState] = useState('');
+
+	const router = useRouter();
 
 	const categories = [
 		'---Choose a category---',
@@ -86,7 +90,6 @@ const ProductForm = () => {
 				setImageUrl(imgUrl as string);
 				productData.imageUrl = imgUrl as string;
 				productData.id = id;
-				console.log(imgUrl, id);
 
 				const productResponse = await fetch('/api/upload/product', {
 					method: 'POST',
@@ -95,7 +98,6 @@ const ProductForm = () => {
 				});
 				if (productResponse.ok) {
 					const data = await productResponse.json();
-					console.log(data);
 				}
 			}
 		} catch (err) {
@@ -107,6 +109,8 @@ const ProductForm = () => {
 			setProductName('');
 			setCategory('---Choose a category---');
 			setImage('');
+
+			router.push('/products');
 		}
 	};
 	return (

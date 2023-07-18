@@ -2,9 +2,10 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { productData } from '@/components/ProductForm';
 import { PrismaClient } from '@prisma/client';
 
+
 interface Data extends productData {
   message?: string;
-  result?: Data
+  result?: Data;
 };
 const prisma = new PrismaClient();
 
@@ -36,5 +37,6 @@ export default async function handler(
     res.status(400).json({ message: 'Invalid request method' });
   }
 }
+
 
 
