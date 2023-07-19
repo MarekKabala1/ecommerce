@@ -4,21 +4,29 @@ import { useRouter } from 'next/router';
 import React, { SyntheticEvent, useEffect, useState } from 'react';
 
 export interface productData {
+	category?: string;
 	id?: string;
 	productName?: string;
 	description?: string;
-	imageUrl?: string;
-	category?: string;
 	price?: number;
+	imageUrl?: string;
 }
 
-const ProductForm = () => {
+const ProductForm: React.FC<productData> = ({
+	category: existingCategory,
+	productName: existingProductName,
+	description: existingDescription,
+	price: existingPrice,
+	imageUrl: existingImageUrl,
+}) => {
+	const [category, setCategory] = useState(
+		existingCategory || '---Choose a category---'
+	);
+	const [productName, setProductName] = useState(existingProductName || '');
+	const [description, setDescription] = useState(existingDescription || '');
+	const [price, setPrice] = useState<number>(existingPrice || 0);
+	const [imageUrl, setImageUrl] = useState(existingImageUrl || '');
 	const [id, setId] = useState('');
-	const [productName, setProductName] = useState('');
-	const [price, setPrice] = useState<number>(0);
-	const [description, setDescription] = useState('');
-	const [category, setCategory] = useState('---Choose a category---');
-	const [imageUrl, setImageUrl] = useState('');
 	const [image, setImage] = useState('');
 	const [imageState, setImageState] = useState('');
 
@@ -115,7 +123,6 @@ const ProductForm = () => {
 	};
 	return (
 		<form onSubmit={SubmitProduct}>
-			<h2>New Product</h2>
 			<label htmlFor='category'>
 				<b>Categories:</b>
 			</label>

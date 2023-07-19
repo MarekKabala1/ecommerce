@@ -21,13 +21,7 @@ const Products: React.FC<fetchedProduct> = () => {
 		await fetch('api/getProducts').then(async (response) => {
 			if (response.ok) {
 				const data: Array<fetchedProduct> = await response.json();
-				// data?.map((mapedDeta: fetchedProduct) => {
-				// 	setFetchedProducts([mapedDeta]);
-				// 	console.log(fetchedProducts);
-				// });
-				console.log(data);
 				setFetchedProducts(data);
-				console.log(fetchedProducts);
 			}
 		});
 	};
@@ -94,7 +88,7 @@ const Products: React.FC<fetchedProduct> = () => {
 								<td>
 									<Link
 										className='btn-default'
-										href={'/products/edit/' + product.id}>
+										href={`/products/edit/${product.id}`}>
 										<svg
 											xmlns='http://www.w3.org/2000/svg'
 											fill='none'
@@ -112,7 +106,7 @@ const Products: React.FC<fetchedProduct> = () => {
 									</Link>
 									<Link
 										className='btn-red'
-										href={'/products/delete/' + product.id}>
+										href={`/products/delete/${product.id}`}>
 										<svg
 											xmlns='http://www.w3.org/2000/svg'
 											fill='none'
