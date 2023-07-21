@@ -6,7 +6,7 @@ import prisma from '@/lib/prisma';
 import React from 'react';
 
 //generate context for prisma instance
-export const AppContext = React.createContext(prisma);
+// export const AppContext = React.createContext(prisma);
 
 export default function App({
 	Component,

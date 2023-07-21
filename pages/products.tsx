@@ -18,7 +18,7 @@ const Products: React.FC<fetchedProduct> = () => {
 		useState<Array<fetchedProduct>>();
 
 	const getProducts = async () => {
-		await fetch('api/getProducts').then(async (response) => {
+		await fetch('api/products').then(async (response) => {
 			if (response.ok) {
 				const data: Array<fetchedProduct> = await response.json();
 				setFetchedProducts(data);
