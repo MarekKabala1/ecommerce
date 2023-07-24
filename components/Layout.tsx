@@ -7,9 +7,9 @@ export default function Layout({ children }: PropsWithChildren) {
 	const { data: session } = useSession();
 	if (session)
 		return (
-			<div className='bg-linear-gradient flex flex-col h-screen'>
+			<div className='bg-linear-gradient flex flex-col h-max'>
 				<TopNav />
-				<div className='flex h-full '>
+				<div className='flex h-screen '>
 					<SideNav />
 					<section className='bg-yellow-50 w-full text-blue-800 flex-grow mt-4 mr-4 mb-4 p-4'>
 						{children}

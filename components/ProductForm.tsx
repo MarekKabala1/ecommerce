@@ -2,7 +2,7 @@ import { redirect } from 'next/dist/server/api-utils';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { SyntheticEvent, useEffect, useState } from 'react';
-
+import cloudinaryLoader from '@/pages/products/edit/[...id]';
 export interface productData {
 	category?: string;
 	id?: string;
@@ -10,14 +10,17 @@ export interface productData {
 	description?: string;
 	price?: number;
 	imageUrl?: string;
+	image?: string;
 }
 
 const ProductForm: React.FC<productData> = ({
+	id: existingId,
 	category: existingCategory,
 	productName: existingProductName,
 	description: existingDescription,
 	price: existingPrice,
 	imageUrl: existingImageUrl,
+	image: existingImage,
 }) => {
 	const [category, setCategory] = useState(
 		existingCategory || '---Choose a category---'
@@ -26,11 +29,12 @@ const ProductForm: React.FC<productData> = ({
 	const [description, setDescription] = useState(existingDescription || '');
 	const [price, setPrice] = useState<number>(existingPrice || 0);
 	const [imageUrl, setImageUrl] = useState(existingImageUrl || '');
-	const [id, setId] = useState('');
-	const [image, setImage] = useState('');
+	const [id, setId] = useState(existingId || '');
+	const [image, setImage] = useState(existingImage || '');
 	const [imageState, setImageState] = useState('');
 
 	const router = useRouter();
+	// console.log(id);
 
 	const categories = [
 		'---Choose a category---',
@@ -172,7 +176,7 @@ const ProductForm: React.FC<productData> = ({
 				name='price'
 				required
 				step={0.1}
-				value={price}
+				value={price.toString()}
 				onChange={(e) => setPrice(parseInt(e.target.value))}
 			/>
 			<div className='flex justify-between mt-2'>
@@ -199,11 +203,21 @@ const ProductForm: React.FC<productData> = ({
 						onChange={handleImageInput}
 					/>
 				</label>
-				<button className='btn-primary text-xs p-4'>Add Product</button>
+				<button className='btn-primary text-xs p-4'>
+					{id ? 'Update Product' : 'Add Product'}
+				</button>
 			</div>
-			<div className='h-52 w-52 mt-2'>
+			<div className='h-auto w-52 mt-2'>
 				{image ? (
-					<Image src={image} width={150} height={150} alt={''} />
+					<Image
+						src={image}
+						width={150}
+						height={225}
+						alt='Product Image'
+						unoptimized={true}
+						loading='lazy'
+						quality={75}
+					/>
 				) : (
 					<p>Image not Uploaded yet</p>
 				)}
