@@ -10,7 +10,7 @@ type Data = {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<Data>,
 ) {
   if (req.method === 'POST') {
     try {
@@ -20,14 +20,20 @@ export default async function handler(
         use_filename: true,
         unique_filename: false,
       });
-      res.status(200).json({ message: 'Image uploaded successfully', imageUrl: uploadResponse.secure_url, cludinary_id: uploadResponse.public_id });
-      console.log(uploadResponse)
-    } catch (error) {
-      console.error('Error uploading image:', error);
+      res.status(200).json({
+        message: 'Image uploaded successfully',
+        imageUrl: uploadResponse.secure_url,
+        cludinary_id: uploadResponse.public_id
+      });
+
+    } catch (err) {
+      console.error('Error uploading image:', err);
       res.status(500).json({ message: 'Error uploading image' });
     }
   } else {
-    res.status(400).json({ message: 'Invalid request method' });
+    res.status(400).json({
+      message: 'Invalid request method'
+    });
   }
 }
 

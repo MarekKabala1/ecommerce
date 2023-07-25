@@ -18,7 +18,7 @@ const Products: React.FC<fetchedProduct> = () => {
 		useState<Array<fetchedProduct>>();
 
 	const getProducts = async () => {
-		await fetch('api/products').then(async (response) => {
+		await fetch('api/product/getProducts').then(async (response) => {
 			if (response.ok) {
 				const data: Array<fetchedProduct> = await response.json();
 				setFetchedProducts(data);
@@ -52,28 +52,6 @@ const Products: React.FC<fetchedProduct> = () => {
 				</Link>
 			</div>
 			<div>
-				{/* <table className='basic '>
-					<thead>
-						<tr className=''>
-							<th>Product Name</th>
-							<th>Category</th>
-							<th>Description</th>
-							<th>Price</th>
-						</tr>
-					</thead>
-					<tbody>
-						{fetchedProducts &&
-							fetchedProducts?.map((product) => (
-								// eslint-disable-next-line react/jsx-key
-								<tr key={product.id}>
-									<td>{product.productName}</td>
-									<td>{product.category}</td>
-									<td>{product.description}</td>
-									<td>{product.price}</td>
-								</tr>
-							))}
-					</tbody>
-				</table> */}
 				<table className='basic mt-2 w-max'>
 					<thead>
 						<tr>

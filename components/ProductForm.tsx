@@ -1,8 +1,7 @@
-import { redirect } from 'next/dist/server/api-utils';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { SyntheticEvent, useEffect, useState } from 'react';
-import cloudinaryLoader from '@/pages/products/edit/[...id]';
+import React, { SyntheticEvent, useState } from 'react';
+
 export interface productData {
 	category?: string;
 	id?: string;
@@ -22,9 +21,7 @@ const ProductForm: React.FC<productData> = ({
 	imageUrl: existingImageUrl,
 	image: existingImage,
 }) => {
-	const [category, setCategory] = useState(
-		existingCategory || '---Choose a category---'
-	);
+	const [category, setCategory] = useState(existingCategory || '');
 	const [productName, setProductName] = useState(existingProductName || '');
 	const [description, setDescription] = useState(existingDescription || '');
 	const [price, setPrice] = useState<number>(existingPrice || 0);
@@ -35,6 +32,8 @@ const ProductForm: React.FC<productData> = ({
 
 	const router = useRouter();
 	// console.log(id);
+
+	//TODO: when editing category from the select field not changing
 
 	const categories = [
 		'---Choose a category---',
@@ -77,6 +76,7 @@ const ProductForm: React.FC<productData> = ({
 
 	const SubmitProduct = async (e: SyntheticEvent) => {
 		e.preventDefault();
+
 		const productData: productData = {
 			id,
 			productName,
@@ -86,30 +86,41 @@ const ProductForm: React.FC<productData> = ({
 			price,
 		};
 		try {
-			const response = await fetch('/api/upload/image', {
-				method: 'POST',
-				body: JSON.stringify({ data: image }),
-				headers: { 'Content-Type': 'application/json' },
-			});
-			if (response.ok) {
-				const data = await response.json();
-
-				const imgUrl = data.imageUrl;
-				let fullId = data.cludinary_id;
-				let id = fullId.slice(14);
-				setId(id);
-
-				setImageUrl(imgUrl as string);
-				productData.imageUrl = imgUrl as string;
-				productData.id = id;
-
-				const productResponse = await fetch('/api/upload/product', {
-					method: 'POST',
-					body: JSON.stringify({ data: productData }),
+			if (id) {
+				const productResponse = await fetch(`/api/product/${id}`, {
+					method: 'PUT',
+					body: JSON.stringify({ ...productData, id }),
 					headers: { 'Content-Type': 'application/json' },
 				});
 				if (productResponse.ok) {
-					const data = await productResponse.json();
+					await productResponse.json();
+				}
+			} else {
+				const response = await fetch('/api/upload/image', {
+					method: 'POST',
+					body: JSON.stringify({ data: image }),
+					headers: { 'Content-Type': 'application/json' },
+				});
+				if (response.ok) {
+					const data = await response.json();
+
+					const imgUrl = data.imageUrl;
+					let fullId = data.cludinary_id;
+					let id = fullId.slice(14);
+					productData.imageUrl = imgUrl as string;
+					productData.id = id;
+
+					setImageUrl(imgUrl as string);
+					setId(id);
+
+					const productResponse = await fetch('/api/upload/product', {
+						method: 'POST',
+						body: JSON.stringify({ data: productData }),
+						headers: { 'Content-Type': 'application/json' },
+					});
+					if (productResponse.ok) {
+						await productResponse.json();
+					}
 				}
 			}
 		} catch (err) {
@@ -198,7 +209,6 @@ const ProductForm: React.FC<productData> = ({
 					<input
 						className='hidden'
 						type='file'
-						required
 						value={imageState}
 						onChange={handleImageInput}
 					/>
@@ -217,6 +227,7 @@ const ProductForm: React.FC<productData> = ({
 						unoptimized={true}
 						loading='lazy'
 						quality={75}
+						style={{ width: 'auto' }}
 					/>
 				) : (
 					<p>Image not Uploaded yet</p>

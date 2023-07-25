@@ -53,10 +53,11 @@ export default async function handler(
       const updatedProduct = await prisma.products.update({
         where: { id: id.toString() },
         data: {
+          category: updatedData.category || existingProduct.category,
           productName: updatedData.productName || existingProduct.productName,
           description: updatedData.description || existingProduct.description,
-          category: updatedData.category || existingProduct.category,
           price: updatedData.price || existingProduct.price,
+          imageUrl: updatedData.imageUrl || existingProduct.imageUrl,
         },
       });
 
