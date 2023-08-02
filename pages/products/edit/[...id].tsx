@@ -10,33 +10,36 @@ const EditProduct = () => {
 
 	const { id } = router.query;
 
-	const fetchedProduct = async () => {
-		if (!id) {
-			return;
-		}
-
-		try {
-			const response = await fetch(`/api/product/${id}`, {
-				method: 'GET',
-			});
-
-			if (response.ok) {
-				const productData: productData = await response.json();
-				setProductToEdit(productData);
-				const url = productData.imageUrl;
-				// const url = urlToModify?.replace(
-				// 	'https://res.cloudinary.com/df6nyjwz2/image/upload',
-				// 	''
-				// );
-				setImageUrl(url?.toString() as string);
-				return url;
-			}
-		} catch (err) {
-			console.error(err);
-		}
-	};
-
 	useEffect(() => {
+		const fetchedProduct = async () => {
+			if (!id) {
+				return;
+			}
+
+			try {
+				const response = await fetch(`/api/product/${id}`, {
+					method: 'GET',
+				});
+
+				if (response.ok) {
+					const productData: productData = await response.json();
+					const url = productData.imageUrl;
+					console.log(url);
+					setProductToEdit(productData);
+					setImageUrl(url?.toString() as string);
+					return url;
+				} else {
+					const errorMessage = await response.text();
+					throw new Error(
+						`Error fetching product data: ${response.status} - ${errorMessage}`
+					);
+				}
+			} catch (err) {
+				console.error(err);
+				throw new Error('Error fetching product data');
+			}
+		};
+
 		fetchedProduct();
 	}, [id]);
 

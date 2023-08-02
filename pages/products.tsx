@@ -1,7 +1,5 @@
-import React, { ReactNode, useEffect, useState } from 'react';
-import { GetServerSideProps } from 'next';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import prisma from '@/lib/prisma';
 import Layout from '@/components/Layout';
 
 type fetchedProduct = {
@@ -11,6 +9,7 @@ type fetchedProduct = {
 	imageUrl: string;
 	category: string;
 	price: number;
+	public_id: string;
 };
 
 const Products: React.FC<fetchedProduct> = () => {
@@ -31,9 +30,9 @@ const Products: React.FC<fetchedProduct> = () => {
 
 	return (
 		<Layout>
-			<div className='text-center'>
+			<div className='text-center mb-2'>
 				<Link
-					className='bg-gray-300 text-blue-700 w-full text-s rounded-md border border-gray-400 p-1 px-2'
+					className='bg-gray-300 text-blue-700 w-full text-s rounded-md border border-gray-400  p-1 px-2'
 					href={'/products/new'}>
 					<svg
 						xmlns='http://www.w3.org/2000/svg'
@@ -52,10 +51,10 @@ const Products: React.FC<fetchedProduct> = () => {
 				</Link>
 			</div>
 			<div>
-				<table className='basic mt-2 w-max'>
+				<table className='basic mt-5 w-max'>
 					<thead>
 						<tr>
-							<td>Product name</td>
+							<td className=' text-blue-700'>Product name</td>
 							<td></td>
 						</tr>
 					</thead>

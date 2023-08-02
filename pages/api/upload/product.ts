@@ -24,13 +24,14 @@ export default async function handler(
           imageUrl: data.imageUrl || '',
           category: data.category || '',
           price: data.price || 0,
+          public_id: data.public_id || '',
         }
       })
       res.status(200).json(result)
-
     } catch (err) {
       // Handle error and send an error response if needed
       res.status(500).json({ message: 'Error creating product' });
+      console.log(err)
     }
   } else {
     // Send a response for invalid request method

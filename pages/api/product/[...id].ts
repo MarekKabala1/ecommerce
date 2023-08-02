@@ -65,7 +65,27 @@ export default async function handler(
     } catch (err) {
       res.status(500).json({ message: 'Error updating product' });
     }
+  } else if (req.method === 'DELETE') {
+    const id = req.query.id?.toString();
+    if (!id) {
+      res.status(400).json({ message: 'id is required' });
+      return;
+    }
+    try {
+      const existingProduct = await prisma.products.delete({
+        where: { id: id.toString() },
+      });
+      if (!existingProduct) {
+        res.status(404).json({ message: 'Product not found' });
+        return;
+      }
+
+    } catch (err) {
+      res.status(500).json({ message: 'Error deleting product' });
+    }
+
   } else {
     res.status(400).json({ message: 'Invalid request method' });
   }
+
 }

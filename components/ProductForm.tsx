@@ -10,6 +10,7 @@ export interface productData {
 	price?: number;
 	imageUrl?: string;
 	image?: string;
+	public_id?: string;
 }
 
 const ProductForm: React.FC<productData> = ({
@@ -20,6 +21,7 @@ const ProductForm: React.FC<productData> = ({
 	price: existingPrice,
 	imageUrl: existingImageUrl,
 	image: existingImage,
+	public_id: existingpublic_id,
 }) => {
 	const [category, setCategory] = useState(existingCategory || '');
 	const [productName, setProductName] = useState(existingProductName || '');
@@ -29,6 +31,7 @@ const ProductForm: React.FC<productData> = ({
 	const [id, setId] = useState(existingId || '');
 	const [image, setImage] = useState(existingImage || '');
 	const [imageState, setImageState] = useState('');
+	const [public_id, setPublic_id] = useState(existingpublic_id || '');
 
 	const router = useRouter();
 	// console.log(id);
@@ -84,6 +87,7 @@ const ProductForm: React.FC<productData> = ({
 			imageUrl,
 			category,
 			price,
+			public_id,
 		};
 		try {
 			if (id) {
@@ -105,12 +109,15 @@ const ProductForm: React.FC<productData> = ({
 					const data = await response.json();
 
 					const imgUrl = data.imageUrl;
+					const public_id = data.public_id;
 					let fullId = data.cludinary_id;
 					let id = fullId.slice(14);
 					productData.imageUrl = imgUrl as string;
 					productData.id = id;
+					productData.public_id = public_id;
 
 					setImageUrl(imgUrl as string);
+					setPublic_id(public_id as string);
 					setId(id);
 
 					const productResponse = await fetch('/api/upload/product', {
@@ -119,7 +126,7 @@ const ProductForm: React.FC<productData> = ({
 						headers: { 'Content-Type': 'application/json' },
 					});
 					if (productResponse.ok) {
-						await productResponse.json();
+						const data = await productResponse.json();
 					}
 				}
 			}
@@ -217,17 +224,17 @@ const ProductForm: React.FC<productData> = ({
 					{id ? 'Update Product' : 'Add Product'}
 				</button>
 			</div>
-			<div className='h-auto w-52 mt-2'>
+			<div className=' mt-2'>
 				{image ? (
 					<Image
 						src={image}
-						width={150}
-						height={225}
+						width={125}
+						height={200}
 						alt='Product Image'
 						unoptimized={true}
 						loading='lazy'
 						quality={75}
-						style={{ width: 'auto' }}
+						style={{ height: 'auto' }}
 					/>
 				) : (
 					<p>Image not Uploaded yet</p>

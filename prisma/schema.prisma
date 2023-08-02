@@ -57,10 +57,11 @@ model VerificationToken {
 }
 
 model Products {
-  id          String @id @unique @default(cuid())
+  id          String @id @default(cuid())
   description String
   category    String
   price       Float
   imageUrl    String
   productName String
+  public_id   String @unique
 }
