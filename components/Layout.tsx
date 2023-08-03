@@ -11,7 +11,7 @@ export default function Layout({ children }: PropsWithChildren) {
 				<TopNav />
 				<div className='flex h-screen '>
 					<SideNav />
-					<section className='bg-yellow-50 w-full text-blue-800 flex-grow mt-4 mr-4 mb-4 p-4'>
+					<section className='bg-yellow-50 w-full h-5/6 text-blue-800 flex-grow mt-4 mr-4 mb-4 p-4'>
 						{children}
 					</section>
 				</div>

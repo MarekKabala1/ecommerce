@@ -4,7 +4,7 @@ import React from 'react';
 
 const Nav = () => {
 	const inActiveLink = 'flex gap-2 mb-2 tracking-widest w-28 text-blue-800';
-	const activeLink = `${inActiveLink} bg-white text-blue-900 p-1 w-28 rounded-l-md `;
+	const activeLink = `${inActiveLink} font-bold bg-white text-blue-900 p-1 w-28 rounded-l-md `;
 	const router = useRouter();
 	const { pathname } = router;
 	return (

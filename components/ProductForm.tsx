@@ -34,7 +34,6 @@ const ProductForm: React.FC<productData> = ({
 	const [public_id, setPublic_id] = useState(existingpublic_id || '');
 
 	const router = useRouter();
-	// console.log(id);
 
 	//TODO: when editing category from the select field not changing
 

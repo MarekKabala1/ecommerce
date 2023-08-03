@@ -25,26 +25,26 @@ label {
 input,
 textarea,
 select {
-	@apply bg-white border text-blue-600 border-gray-300 p-1 rounded-md w-full mb-2;
+	@apply bg-slate-200  border text-blue-800 border-gray-400 p-1 rounded-md w-full mb-2;
 }
 
 input:focus,
 textarea:focus {
-	@apply bg-white border outline-none border-blue-400 p-1 rounded-md w-full;
+	@apply bg-slate-200  border outline-none border-gray-400 p-1 rounded-md w-full;
 }
 input::placeholder,
 textarea::placeholder {
-	@apply text-blue-600 text-xs p-1 opacity-30;
+	@apply text-blue-800 text-xs p-1 opacity-30;
 }
 .header {
 	@apply text-center text-blue-800 text-xl mb-2;
 }
 table.basic {
-	@apply w-auto m-auto bg-white rounded-sm shadow-md;
+	@apply w-auto m-auto bg-slate-200 rounded-sm shadow-md;
 }
 table.basic thead tr td,
 table.basic thead tr th {
-	@apply text-sm text-gray-600 uppercase border-b border-gray-200 px-4 py-2;
+	@apply text-sm font-bold text-blue-800 uppercase border-b border-gray-400 px-4 py-2;
 }
 table.basic tr td {
 	@apply px-6 py-2;

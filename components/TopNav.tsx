@@ -6,10 +6,10 @@ const TopNav = () => {
 	if (session)
 		return (
 			<nav className=' bg-transparent w-full'>
-				<h1 className='text-blue-700 text-center'>
+				<h1 className='text-blue-800 text-center text-xl mt-3'>
 					<b>Ecommerce Admin Page</b>{' '}
 				</h1>
-				<aside className='flex items-center justify-between px-4 pb-4 text-blue-700'>
+				<aside className='flex items-center justify-between px-4 pb-4 text-blue-800'>
 					<Link href={'/'} className='flex gap-2'>
 						<svg
 							xmlns='http://www.w3.org/2000/svg'
