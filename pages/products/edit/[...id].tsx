@@ -24,7 +24,7 @@ const EditProduct = () => {
 				if (response.ok) {
 					const productData: productData = await response.json();
 					const url = productData.imageUrl;
-					console.log(url);
+
 					setProductToEdit(productData);
 					setImageUrl(url?.toString() as string);
 					return url;

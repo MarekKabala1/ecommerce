@@ -58,6 +58,7 @@ export default async function handler(
           description: updatedData.description || existingProduct.description,
           price: updatedData.price || existingProduct.price,
           imageUrl: updatedData.imageUrl || existingProduct.imageUrl,
+          quantity: updatedData.quantity || existingProduct.quantity,
         },
       });
 

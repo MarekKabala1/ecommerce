@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
 import { productData } from '@/components/ProductForm';
+import Spiner from '@/components/Spiner';
 
 const DeleteProductPage = () => {
 	const router = useRouter();
 	const [productInfo, setProductInfo] = useState<productData>();
 	const [imageUrl, setImageUrl] = useState<string>('');
 	const [public_id, setPublic_Id] = useState<string>();
+	const [isLoading, setIsLoading] = useState(false);
 	const { id } = router.query;
 
 	const goBack = () => {
@@ -17,6 +18,7 @@ const DeleteProductPage = () => {
 
 	useEffect(() => {
 		const fetchedProduct = async () => {
+			setIsLoading(true);
 			if (!id) {
 				return;
 			}
@@ -33,6 +35,7 @@ const DeleteProductPage = () => {
 					setProductInfo(productData);
 					setImageUrl(url?.toString() as string);
 					setPublic_Id(public_id?.toString() as string);
+					setIsLoading(false);
 				} else {
 					const errorMessage = await response.text();
 					throw new Error(
@@ -99,25 +102,31 @@ const DeleteProductPage = () => {
 
 	return (
 		<Layout>
-			<div className='border-2 border-gray-300 p-4 rounded-md'>
-				<h1 className='text-center mb-4 '>
-					Do you really want to delete &nbsp;
-					<span className='font-bold'>
-						&quot;
-						{productInfo?.productName}
-						&quot;
-					</span>
-					?
-				</h1>
-				<div className='flex gap-3 justify-center'>
-					<button onClick={deleteProduct} className='btn-red'>
-						Yes
-					</button>
-					<button className='btn-primary ' onClick={goBack}>
-						NO
-					</button>
+			{isLoading ? (
+				<div className='w-full h-full flex justify-center items-center'>
+					<Spiner />
 				</div>
-			</div>
+			) : (
+				<div className='border-2 border-gray-300 p-4 rounded-md'>
+					<h1 className='text-center mb-4 '>
+						Do you really want to delete &nbsp;
+						<span className='font-bold'>
+							&quot;
+							{productInfo?.productName}
+							&quot;
+						</span>
+						?
+					</h1>
+					<div className='flex gap-3 justify-center'>
+						<button onClick={deleteProduct} className='btn-red'>
+							Yes
+						</button>
+						<button className='btn-primary ' onClick={goBack}>
+							NO
+						</button>
+					</div>
+				</div>
+			)}
 		</Layout>
 	);
 };

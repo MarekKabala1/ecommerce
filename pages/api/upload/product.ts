@@ -17,6 +17,9 @@ export default async function handler(
   if (req.method === 'POST') {
     try {
       const data: Data = req.body.data
+      if (typeof data.quantity !== 'number') {
+        throw new Error('Quantity is required');
+      }
       const result = await prisma.products.create({
         data: {
           id: data.id,
@@ -26,6 +29,7 @@ export default async function handler(
           category: data.category || '',
           price: data.price || 0,
           public_id: data.public_id || '',
+          quantity: data.quantity || 1,
         }
       })
       res.status(200).json(result)

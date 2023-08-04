@@ -63,5 +63,6 @@ model Products {
   price       Float
   imageUrl    String
   productName String
+  quantity    Float
   public_id   String @unique
 }
