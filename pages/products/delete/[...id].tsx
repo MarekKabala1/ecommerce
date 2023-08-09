@@ -24,7 +24,7 @@ const DeleteProductPage = () => {
 			}
 
 			try {
-				const response = await fetch(`/api/product/${id}`, {
+				const response = await fetch(`/api/product/edit-delete/${id}`, {
 					method: 'GET',
 				});
 
@@ -76,7 +76,7 @@ const DeleteProductPage = () => {
 
 	const deleteProductFromPlanetScale = async () => {
 		try {
-			const response = await fetch(`/api/product/${id}`, {
+			const response = await fetch(`/api/product/edit-delete/${id}`, {
 				method: 'DELETE',
 			});
 

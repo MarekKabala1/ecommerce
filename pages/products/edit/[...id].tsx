@@ -17,7 +17,7 @@ const EditProduct = () => {
 			}
 
 			try {
-				const response = await fetch(`/api/product/${id}`, {
+				const response = await fetch(`/api/product/edit-delete/${id}`, {
 					method: 'GET',
 				});
 

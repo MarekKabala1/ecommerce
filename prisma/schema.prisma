@@ -1,3 +1,4 @@
+// schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -46,6 +47,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+
+  @@index([email])
 }
 
 model VerificationToken {
@@ -57,12 +60,60 @@ model VerificationToken {
 }
 
 model Products {
-  id          String @id @default(cuid())
+  id          String      @id @default(cuid())
   description String
-  category    String
   price       Float
   imageUrl    String
   productName String
   quantity    Float
-  public_id   String @unique
+  isFeatured  Boolean     @default(false)
+  isArchived  Boolean     @default(false)
+  public_id   String      @unique
+  categoryId  String
+  brandId     String
+  orderItems  OrderItem[]
+
+  brand      Brand      @relation(fields: [brandId], references: [id])
+  categories Category[]
+
+  @@index([productName])
+  @@index([brandId])
+}
+
+model Category {
+  id           String     @id @default(cuid())
+  categoryName String
+  products     Products[]
+
+  @@index([categoryName])
+}
+
+model Brand {
+  id        String     @id @default(cuid())
+  brandName String
+  products  Products[]
+
+  @@index([brandName])
+}
+
+model Order {
+  id         String      @id @default(cuid())
+  orderItems OrderItem[]
+  phone      String
+  address    String
+  createdAt  DateTime    @default(now())
+
+  @@index([phone])
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  productId String
+  quantity  Int
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Products @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
 }

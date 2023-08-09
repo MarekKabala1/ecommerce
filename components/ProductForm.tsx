@@ -95,14 +95,13 @@ const ProductForm: React.FC<productData> = ({
 		};
 		try {
 			if (id) {
-				const productResponse = await fetch(`/api/product/${id}`, {
+				const productResponse = await fetch(`/api/product/edit-delete/${id}`, {
 					method: 'PUT',
 					body: JSON.stringify({ ...productData, id }),
 					headers: { 'Content-Type': 'application/json' },
 				});
 				if (productResponse.ok) {
 					const data = await productResponse.json();
-					console.log(data);
 				}
 			} else {
 				const response = await fetch('/api/upload/image', {
@@ -156,49 +155,51 @@ const ProductForm: React.FC<productData> = ({
 					<Spiner />
 				</div>
 			) : (
-				<form onSubmit={SubmitProduct}>
+				<form
+					onSubmit={SubmitProduct}
+					className='max-w-lg mx-auto border-t p-3 border-gray-200  '>
 					<label htmlFor='category'>
 						<b>Categories:</b>
+						<select
+							className='text-center'
+							name='category'
+							id='category'
+							value={category}
+							required
+							onChange={(e) => setCategory(e.target.value)}>
+							{categories.map((category) => (
+								<option key={category} value={category}>
+									{category}
+								</option>
+							))}
+						</select>
 					</label>
-					<select
-						className='text-center'
-						name='category'
-						id='category'
-						value={category}
-						required
-						onChange={(e) => setCategory(e.target.value)}>
-						{categories.map((category) => (
-							<option key={category} value={category}>
-								{category}
-							</option>
-						))}
-					</select>
 					<label htmlFor='product'>
 						<b>Product Name:</b>
+						<input
+							type='text'
+							placeholder='Product Name'
+							id='product'
+							name='product'
+							required
+							value={productName}
+							onChange={(e) => setProductName(e.target.value)}
+						/>
 					</label>
-					<input
-						type='text'
-						placeholder='Product Name'
-						id='product'
-						name='product'
-						required
-						value={productName}
-						onChange={(e) => setProductName(e.target.value)}
-					/>
 					<label htmlFor='description'>
 						<b>Description:</b>
+						<textarea
+							placeholder='Description'
+							id='description'
+							name='description'
+							required
+							value={description}
+							onChange={(e) => setDescription(e.target.value)}
+						/>
 					</label>
-					<textarea
-						placeholder='Description'
-						id='description'
-						name='description'
-						required
-						value={description}
-						onChange={(e) => setDescription(e.target.value)}
-					/>
-					<div className='flex justify-center items-center'>
-						<label htmlFor='price'>
-							<b>Price in £ (GB):</b>
+					<div className='flex justify-between items-center'>
+						<label htmlFor='price' className='w-20'>
+							<b>Price in £</b>
 							<input
 								type='number'
 								placeholder='Price'
@@ -210,7 +211,7 @@ const ProductForm: React.FC<productData> = ({
 								onChange={(e) => setPrice(parseFloat(e.target.value))}
 							/>
 						</label>
-						<label htmlFor='quantity'>
+						<label htmlFor='quantity' className='w-20'>
 							<b>Quantity</b>
 							<input
 								type='number'

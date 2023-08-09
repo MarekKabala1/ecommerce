@@ -1,14 +1,23 @@
+import React from 'react';
+import { useSession, signOut } from 'next-auth/react';
+
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
 
 const Nav = () => {
-	const inActiveLink = 'flex gap-2 mb-2 tracking-widest w-28 text-blue-800';
-	const activeLink = `${inActiveLink} font-bold bg-white text-blue-900 p-1 w-28 rounded-l-md `;
+	const inActiveLink = ' flex gap-3 mb-2 tracking-widest w-28 text-gray-700';
+	const activeLink = `${inActiveLink} font-bold bg-gray-200 text-gray-700 p-1 w-28 rounded-md `;
+
 	const router = useRouter();
 	const { pathname } = router;
+
+	const logOut = async () => {
+		await router.push('/');
+		await signOut();
+	};
+
 	return (
-		<nav className='text-blue-800 p-4 pr-0 text-xs  '>
+		<nav className=' flex flex-col gap-4 text-gray-700 px-8 text-xs border-r my-5 border-gray-300  '>
 			<Link href={'/'} className={pathname === '/' ? activeLink : inActiveLink}>
 				<svg
 					xmlns='http://www.w3.org/2000/svg'
@@ -42,6 +51,42 @@ const Nav = () => {
 					/>
 				</svg>
 				Products
+			</Link>
+			<Link
+				href={'/category'}
+				className={pathname.includes('/category') ? activeLink : inActiveLink}>
+				<svg
+					xmlns='http://www.w3.org/2000/svg'
+					fill='none'
+					viewBox='0 0 24 24'
+					strokeWidth={1.5}
+					stroke='currentColor'
+					className='w-6 h-6'>
+					<path
+						strokeLinecap='round'
+						strokeLinejoin='round'
+						d='M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 002.25-2.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v2.25A2.25 2.25 0 006 10.5zm0 9.75h2.25A2.25 2.25 0 0010.5 18v-2.25a2.25 2.25 0 00-2.25-2.25H6a2.25 2.25 0 00-2.25 2.25V18A2.25 2.25 0 006 20.25zm9.75-9.75H18a2.25 2.25 0 002.25-2.25V6A2.25 2.25 0 0018 3.75h-2.25A2.25 2.25 0 0013.5 6v2.25a2.25 2.25 0 002.25 2.25z'
+					/>
+				</svg>
+				Catrgory
+			</Link>
+			<Link
+				href={'/brand'}
+				className={pathname.includes('/brand') ? activeLink : inActiveLink}>
+				<svg
+					xmlns='http://www.w3.org/2000/svg'
+					fill='none'
+					viewBox='0 0 24 24'
+					strokeWidth={1.5}
+					stroke='currentColor'
+					className='w-6 h-6'>
+					<path
+						strokeLinecap='round'
+						strokeLinejoin='round'
+						d='M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 002.25-2.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v2.25A2.25 2.25 0 006 10.5zm0 9.75h2.25A2.25 2.25 0 0010.5 18v-2.25a2.25 2.25 0 00-2.25-2.25H6a2.25 2.25 0 00-2.25 2.25V18A2.25 2.25 0 006 20.25zm9.75-9.75H18a2.25 2.25 0 002.25-2.25V6A2.25 2.25 0 0018 3.75h-2.25A2.25 2.25 0 0013.5 6v2.25a2.25 2.25 0 002.25 2.25z'
+					/>
+				</svg>
+				Brand
 			</Link>
 			<Link
 				href={'/orders'}
@@ -84,6 +129,24 @@ const Nav = () => {
 				</svg>
 				Settings
 			</Link>
+			<button
+				className={pathname.includes('/orders') ? activeLink : inActiveLink}
+				onClick={logOut}>
+				<svg
+					xmlns='http://www.w3.org/2000/svg'
+					fill='none'
+					viewBox='0 0 24 24'
+					strokeWidth={1.5}
+					stroke='currentColor'
+					className='w-6 h-6'>
+					<path
+						strokeLinecap='round'
+						strokeLinejoin='round'
+						d='M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75'
+					/>
+				</svg>
+				LogOut
+			</button>
 		</nav>
 	);
 };
