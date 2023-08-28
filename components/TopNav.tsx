@@ -5,6 +5,7 @@ import { useState } from 'react';
 const TopNav = () => {
 	const { data: session, status } = useSession();
 	const [isOpen, setIsOpen] = useState(false);
+	console.log(session);
 
 	const toggleTheme = () => {
 		if (!isOpen) {
@@ -24,7 +25,12 @@ const TopNav = () => {
 						<p>{session.user?.name}</p>
 
 						{session.user?.image ? (
-							<img src={session.user?.image} className='w-9 h-9 rounded-full' />
+							// eslint-disable-next-line @next/next/no-img-element
+							<img
+								src={session.user?.image}
+								alt=''
+								className='w-9 h-9 rounded-full'
+							/>
 						) : (
 							<div className='w-10 h-10 rounded-full border p-1 cursor-pointer flex justify-center items-center '>
 								<svg

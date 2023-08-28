@@ -130,7 +130,7 @@ const Nav = () => {
 				Settings
 			</Link>
 			<button
-				className={pathname.includes('/orders') ? activeLink : inActiveLink}
+				className={pathname.includes('/logOut') ? activeLink : inActiveLink}
 				onClick={logOut}>
 				<svg
 					xmlns='http://www.w3.org/2000/svg'
