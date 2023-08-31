@@ -5,7 +5,7 @@ import { useState } from 'react';
 const TopNav = () => {
 	const { data: session, status } = useSession();
 	const [isOpen, setIsOpen] = useState(false);
-	console.log(session);
+	// console.log(session);
 
 	const toggleTheme = () => {
 		if (!isOpen) {

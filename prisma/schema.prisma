@@ -69,11 +69,11 @@ model Products {
   isFeatured  Boolean     @default(false)
   isArchived  Boolean     @default(false)
   public_id   String      @unique
-  categoryId  String
-  brandId     String
+  categoryId  String?
+  brandId     String?
   orderItems  OrderItem[]
 
-  brand      Brand      @relation(fields: [brandId], references: [id])
+  brand      Brand?     @relation(fields: [brandId], references: [id])
   categories Category[]
 
   @@index([productName])
@@ -92,6 +92,7 @@ model Brand {
   id        String     @id @default(cuid())
   brandName String
   products  Products[]
+  public_id String?
 
   @@index([brandName])
 }
