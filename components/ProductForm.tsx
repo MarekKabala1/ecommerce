@@ -151,9 +151,7 @@ const ProductForm: React.FC<productData> = ({
 	return (
 		<>
 			{isLoading ? (
-				<div className='w-full h-full flex justify-center items-center'>
-					<Spiner />
-				</div>
+				<Spiner />
 			) : (
 				<form
 					onSubmit={SubmitProduct}

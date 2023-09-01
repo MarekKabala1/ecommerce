@@ -26,13 +26,13 @@ export default async function handler(
       });
 
       if (!brand) {
-        res.status(404).json({ message: 'Product not found' });
+        res.status(404).json({ message: 'Brand not found' });
         return;
       }
       res.status(200).json(brand as Data);
 
     } catch (err) {
-      res.status(500).json({ message: 'Error fetching product' });
+      res.status(500).json({ message: 'Error fetching Brand' });
     }
   } else if (req.method === 'PUT') {
     const { id } = req.query;
@@ -46,7 +46,7 @@ export default async function handler(
         where: { id: id.toString() },
       });
       if (!existingBrand) {
-        res.status(404).json({ message: 'Product not found' });
+        res.status(404).json({ message: 'Brand not found' });
         return;
       }
 
@@ -62,7 +62,7 @@ export default async function handler(
 
       res.status(200).json(updatedBrand);
     } catch (err) {
-      res.status(500).json({ message: 'Error updating product' });
+      res.status(500).json({ message: 'Error updating brand' });
     }
   } else if (req.method === 'DELETE') {
     const id = req.query.id?.toString();
@@ -71,16 +71,16 @@ export default async function handler(
       return;
     }
     try {
-      const existingProduct = await prisma.products.delete({
+      const existingBrand = await prisma.brand.delete({
         where: { id: id.toString() },
       });
-      if (!existingProduct) {
-        res.status(404).json({ message: 'Product not found' });
+      if (!existingBrand) {
+        res.status(404).json({ message: 'Brand not found' });
         return;
       }
 
     } catch (err) {
-      res.status(500).json({ message: 'Error deleting product' });
+      res.status(500).json({ message: 'Error deleting brand' });
     }
 
   } else {

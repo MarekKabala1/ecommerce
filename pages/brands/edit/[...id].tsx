@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 
 const EditBrand = () => {
 	const [brandToEdit, setBrandToEdit] = useState<brandTypes>();
-	const [imageUrl, setImageUrl] = useState<string>('');
+	const [imagePublicId, setImagePublicId] = useState<string>('');
 	const router = useRouter();
 
 	const { id } = router.query;
@@ -23,7 +23,10 @@ const EditBrand = () => {
 
 				if (response.ok) {
 					const brandData: brandTypes = await response.json();
+					const public_id = brandData.public_id;
+
 					setBrandToEdit(brandData);
+					setImagePublicId(public_id?.toString() as string);
 				} else {
 					const errorMessage = await response.text();
 					throw new Error(
@@ -41,8 +44,12 @@ const EditBrand = () => {
 
 	return (
 		<Layout>
-			<h1 className='header'>Edit Brand</h1>
-			{brandToEdit && <BrandForm {...brandToEdit} />}
+			{brandToEdit && (
+				<BrandForm
+					{...brandToEdit}
+					image={`https://res.cloudinary.com/df6nyjwz2/image/upload/${imagePublicId}`}
+				/>
+			)}
 		</Layout>
 	);
 };

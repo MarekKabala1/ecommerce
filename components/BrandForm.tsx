@@ -1,6 +1,9 @@
 import Image from 'next/image';
 import React, { SyntheticEvent, useState } from 'react';
 import Spiner from './Spiner';
+import { useRouter } from 'next/router';
+import getBrands from '@/pages/brands';
+import { METHODS } from 'http';
 
 export interface brandTypes {
 	id?: string;
@@ -24,6 +27,8 @@ const BrandForm: React.FC<brandTypes> = ({
 	const [public_id, setPublic_id] = useState(existingPublic_id || '');
 	const [isLoading, setIsLoading] = useState(false);
 
+	const router = useRouter();
+
 	const handleImageInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (!e.target || !e.target.files || e.target.files.length === 0) {
 			return;
@@ -44,38 +49,49 @@ const BrandForm: React.FC<brandTypes> = ({
 	};
 
 	const addBrand = async (e: SyntheticEvent) => {
+		e.preventDefault();
 		setIsLoading(true);
 		const brandData: brandTypes = {
 			id,
 			brandName,
 			public_id,
 		};
-		e.preventDefault();
 		try {
-			const response = await fetch('/api/upload/image', {
-				method: 'POST',
-				body: JSON.stringify({ data: image }),
-				headers: { 'Content-Type': 'application/json' },
-			});
-			if (response.ok) {
-				const data = await response.json();
+			if (id) {
+				const brandResponse = await fetch(`/api/brands/edit-delete/${id}`, {
+					method: 'PUT',
+					body: JSON.stringify({ ...brandData, id }),
+					headers: { 'Content-Type': 'application/json' },
+				});
+				if (brandResponse.ok) {
+					const data = await brandResponse.json();
+				}
+			} else {
+				const response = await fetch('/api/upload/image', {
+					method: 'POST',
+					body: JSON.stringify({ data: image }),
+					headers: { 'Content-Type': 'application/json' },
+				});
+				if (response.ok) {
+					const data = await response.json();
 
-				const public_id = data.public_id;
-				brandData.public_id = public_id;
-				setPublic_id(public_id as string);
+					const public_id = data.public_id;
+					brandData.public_id = public_id;
+					setPublic_id(public_id as string);
 
-				brandData.id = self.crypto.randomUUID();
-				const id = brandData?.id;
-				setId(id);
-			}
-			const brandResponse = await fetch('/api/upload/brand', {
-				method: 'POST',
-				body: JSON.stringify({ data: brandData }),
-				headers: { 'Content-Type': 'application/json' },
-			});
-			if (brandResponse.ok) {
-				await brandResponse.json();
-				console.log(brandResponse);
+					brandData.id = self.crypto.randomUUID();
+					const id = brandData?.id;
+					setId(id);
+				}
+				const brandResponse = await fetch('/api/upload/brand', {
+					method: 'POST',
+					body: JSON.stringify({ data: brandData }),
+					headers: { 'Content-Type': 'application/json' },
+				});
+				if (brandResponse.ok) {
+					await brandResponse.json();
+					console.log(brandResponse);
+				}
 			}
 		} catch (err) {
 			console.log(err);
@@ -86,18 +102,20 @@ const BrandForm: React.FC<brandTypes> = ({
 			setImage('');
 			setImageState('');
 			setIsLoading(false);
+
+			router.push('/brands');
 		}
 	};
 
 	return (
 		<>
 			{isLoading ? (
-				<div className='w-full h-full flex justify-center items-center'>
-					<Spiner />
-				</div>
+				<Spiner />
 			) : (
 				<>
-					<h1 className='heade text-center mb-4'>Brand Page</h1>
+					<h1 className='header text-center mb-4'>
+						{id ? 'Edit Brand' : 'Brand Page'}
+					</h1>
 					<form
 						className='flex flex-col  justify-center gap-3 mb-8'
 						onSubmit={addBrand}>
@@ -121,7 +139,7 @@ const BrandForm: React.FC<brandTypes> = ({
 								{image ? (
 									<Image
 										src={image}
-										alt='Product Image'
+										alt='Brand Image'
 										unoptimized={true}
 										loading='lazy'
 										quality={75}
@@ -154,7 +172,7 @@ const BrandForm: React.FC<brandTypes> = ({
 							</label>
 						</div>
 						<button type='submit' className='btn-primary w-fit mx-auto'>
-							Add Brand
+							{id ? 'Update Brand' : 'Add Brand'}
 						</button>
 					</form>
 				</>
