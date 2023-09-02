@@ -1,39 +1,67 @@
+import { makeApiRequest } from '@/utils/apiRequest';
+import { useRouter } from 'next/router';
 import React, { SyntheticEvent, useState } from 'react';
 
 export interface categoryTypes {
-	id: string;
-	categoryName: string;
+	id?: string;
+	categoryName?: string;
+	products?: [];
 }
 
 const CategoryForm: React.FC<categoryTypes> = ({
 	id: existingCategoryId,
 	categoryName: existingCanegoryName,
+	products: existingProducts,
 }) => {
 	const [categoryName, setCategoryName] = useState(existingCanegoryName || '');
 	const [id, setId] = useState<string>(existingCategoryId || '');
-	const [categoryArray, setCategoryArray] = useState<Array<categoryTypes>>([]);
+	const [isLoading, setIsLoading] = useState(false);
 
-	const addCategory = (e: SyntheticEvent) => {
+	const router = useRouter();
+
+	const addCategory = async (e: SyntheticEvent) => {
 		e.preventDefault();
-		console.log('click');
+		setIsLoading(true);
+		if (!categoryName) {
+			throw new Error('Category Name is required.');
+		}
 
 		const categoryData: categoryTypes = {
 			id,
 			categoryName,
 		};
 		try {
-			categoryData.id = self.crypto.randomUUID();
-
-			setCategoryArray((_categoryData) => [...categoryArray]);
-			console.log(categoryData);
-		} catch (err) {}
+			if (id) {
+				const updatedCategory = await makeApiRequest(
+					`/api/categorys/edit-delete/${id}`,
+					'PUT',
+					{ ...categoryData, id }
+				);
+			} else {
+				categoryData.id = self.crypto.randomUUID();
+				const id = categoryData?.id;
+				setId(id as string);
+				const createdCategory = await makeApiRequest(
+					'/api/upload/category',
+					'POST',
+					{ data: categoryData }
+				);
+			}
+		} catch (err: Error | any) {
+			console.error('An error occurred:', err.message);
+		} finally {
+			setId('');
+			setCategoryName('');
+			setIsLoading(false);
+			router.push('/categorys');
+		}
 	};
 
 	return (
 		<>
 			<h1 className='heade text-center mb-4'>Category Page</h1>
 			<form
-				className='flex flex-col items-center justify-center'
+				className='flex flex-col items-center justify-center mb-8'
 				onSubmit={addCategory}>
 				<input
 					type='text'
@@ -46,7 +74,7 @@ const CategoryForm: React.FC<categoryTypes> = ({
 					onChange={(e) => setCategoryName(e.target.value)}
 				/>
 				<button type='submit' className='btn-primary'>
-					Add Category
+					{id ? 'Edit Category' : 'Add Category'}
 				</button>
 			</form>
 		</>

@@ -2,8 +2,6 @@ import Image from 'next/image';
 import React, { SyntheticEvent, useState } from 'react';
 import Spiner from './Spiner';
 import { useRouter } from 'next/router';
-import getBrands from '@/pages/brands';
-import { METHODS } from 'http';
 
 export interface brandTypes {
 	id?: string;
@@ -90,7 +88,6 @@ const BrandForm: React.FC<brandTypes> = ({
 				});
 				if (brandResponse.ok) {
 					await brandResponse.json();
-					console.log(brandResponse);
 				}
 			}
 		} catch (err) {
@@ -114,7 +111,7 @@ const BrandForm: React.FC<brandTypes> = ({
 			) : (
 				<>
 					<h1 className='header text-center mb-4'>
-						{id ? 'Edit Brand' : 'Brand Page'}
+						{id ? 'Edit Brand' : 'Add Brand'}
 					</h1>
 					<form
 						className='flex flex-col  justify-center gap-3 mb-8'
