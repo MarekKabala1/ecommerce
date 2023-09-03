@@ -4,26 +4,15 @@ import { categoryTypes } from '@/components/CategoryForm';
 import { useEffect, useState } from 'react';
 import { FetchedCategory } from './api/categorys/getCategorys';
 import Link from 'next/link';
+import { fetchData } from '@/utils/apiRequests';
 
 const Category: React.FC<categoryTypes> = () => {
-	const [fetchedCategorys, setFetchedCategorys] =
+	const [fetchedcategorys, setFetchedcategorys] =
 		useState<Array<FetchedCategory>>();
 	const [isLoading, setIsLoading] = useState(false);
 
-	const getCategorys = async () => {
-		setIsLoading(true);
-
-		await fetch('api/categorys/getCategorys').then(async (response) => {
-			if (response.ok) {
-				const data: Array<FetchedCategory> = await response.json();
-				setFetchedCategorys(data);
-				setIsLoading(false);
-			}
-		});
-	};
-
 	useEffect(() => {
-		getCategorys();
+		fetchData(setFetchedcategorys, setIsLoading, 'categorys');
 	}, []);
 	return (
 		<Layout>
@@ -36,7 +25,7 @@ const Category: React.FC<categoryTypes> = () => {
 					</tr>
 				</thead>
 				<tbody>
-					{fetchedCategorys?.map((category) => (
+					{fetchedcategorys?.map((category) => (
 						<tr key={category.id}>
 							<td className='text-xs md:text-sm'>{category.categoryName}</td>
 							<td>

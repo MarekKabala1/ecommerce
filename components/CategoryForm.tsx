@@ -1,4 +1,4 @@
-import { makeApiRequest } from '@/utils/apiRequest';
+import { makeApiRequest } from '@/utils/apiRequests';
 import { useRouter } from 'next/router';
 import React, { SyntheticEvent, useState } from 'react';
 
@@ -53,7 +53,12 @@ const CategoryForm: React.FC<categoryTypes> = ({
 			setId('');
 			setCategoryName('');
 			setIsLoading(false);
-			router.push('/categorys');
+
+			if (!id) {
+				router.reload();
+			} else {
+				router.push('/categorys');
+			}
 		}
 	};
 

@@ -27,6 +27,7 @@ export default async function handler(
         cludinary_id: uploadResponse.public_id,
         public_id: uploadResponse.public_id
       });
+      console.log(uploadResponse.public_id)
     } catch (err) {
       console.error('Error uploading image:', err);
       res.status(500).json({ message: 'Error uploading image' });

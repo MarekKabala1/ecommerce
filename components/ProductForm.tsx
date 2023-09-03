@@ -1,64 +1,60 @@
-import React, { SyntheticEvent, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Spiner from '@/components/Spiner';
+import { fetchData } from '@/utils/apiRequests';
+import { FetchedBrand } from '@/pages/api/brands/getBrands';
+import { FetchedCategory } from '@/pages/api/categorys/getCategorys';
 
 export interface productData {
-	category?: string;
 	id?: string;
 	productName?: string;
+	category?: string;
+	brandId?: string;
 	description?: string;
-	price?: number;
 	imageUrl?: string;
 	image?: string;
 	public_id?: string;
+	isFeatured?: boolean;
+	isArchived?: boolean;
+	price?: number;
 	quantity?: number;
 }
 
 const ProductForm: React.FC<productData> = ({
 	id: existingId,
-	category: existingCategory,
 	productName: existingProductName,
+	category: existingCategory,
+	brandId: existingBrandId,
 	description: existingDescription,
-	price: existingPrice,
 	imageUrl: existingImageUrl,
 	image: existingImage,
 	public_id: existingpublic_id,
+	isFeatured: existingIsFeatured,
+	isArchived: existingIsArchived,
+	price: existingPrice,
 	quantity: existingQuantity,
 }) => {
-	const [category, setCategory] = useState(existingCategory || '');
-	const [productName, setProductName] = useState(existingProductName || '');
-	const [description, setDescription] = useState(existingDescription || '');
-	const [price, setPrice] = useState<number>(existingPrice || 0);
-	const [imageUrl, setImageUrl] = useState(existingImageUrl || '');
 	const [id, setId] = useState(existingId || '');
+	const [productName, setProductName] = useState(existingProductName || '');
+	const [category, setCategory] = useState(existingCategory || '');
+	const [brandId, setBrandId] = useState(existingBrandId || '');
+	const [description, setDescription] = useState(existingDescription || '');
+	const [imageUrl, setImageUrl] = useState(existingImageUrl || '');
 	const [image, setImage] = useState(existingImage || '');
 	const [imageState, setImageState] = useState('');
 	const [public_id, setPublic_id] = useState(existingpublic_id || '');
+	const [isFeatured, setisFeatured] = useState(existingIsFeatured || false);
+	const [isArchived, setisArchived] = useState(existingIsArchived || false);
+	const [price, setPrice] = useState<number>(existingPrice || 0);
 	const [quantity, setQuantity] = useState<number>(existingQuantity || 0);
+	const [fetchedBrands, setFetchedBrands] = useState<Array<FetchedBrand>>([]);
+	const [fetchedCategorys, setFetchedCategorys] = useState<
+		Array<FetchedCategory>
+	>([]);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const router = useRouter();
-
-	const categories = [
-		'---Choose a category---',
-		'Proteins',
-		'Testosterone & Performance Boosters',
-		'Immunity',
-		'Concentration, Memory & Energy',
-		'Healthy Food',
-		'Creatine',
-		'Amino Acids',
-		'Heart & Circulatory System',
-		'Weight & Mass Gainers',
-		'Endurance',
-		'Keto Products',
-		'Vitamins & Minerals',
-		'Regeneration Formulas',
-		'Fat Burners & Weight Loss',
-		'Nightly Regeneration',
-		'Accessories',
-	];
 
 	const handleImageInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (!e.target || !e.target.files || e.target.files.length === 0) {
@@ -78,6 +74,10 @@ const ProductForm: React.FC<productData> = ({
 			}
 		};
 	};
+	useEffect(() => {
+		fetchData(setFetchedBrands, setIsLoading, 'brands');
+		fetchData(setFetchedCategorys, setIsLoading, 'categorys');
+	}, []);
 
 	const SubmitProduct = async (e: SyntheticEvent) => {
 		e.preventDefault();
@@ -157,7 +157,7 @@ const ProductForm: React.FC<productData> = ({
 					onSubmit={SubmitProduct}
 					className='max-w-lg mx-auto border-t p-3 border-gray-200  '>
 					<label htmlFor='category'>
-						<b>Categories:</b>
+						<b>categorys:</b>
 						<select
 							className='text-center'
 							name='category'
@@ -165,25 +165,46 @@ const ProductForm: React.FC<productData> = ({
 							value={category}
 							required
 							onChange={(e) => setCategory(e.target.value)}>
-							{categories.map((category) => (
-								<option key={category} value={category}>
-									{category}
-								</option>
-							))}
+							{fetchedCategorys &&
+								fetchedCategorys.map((category) => (
+									<option key={category.id} value={category.categoryName}>
+										{category.categoryName}
+									</option>
+								))}
 						</select>
 					</label>
-					<label htmlFor='product'>
-						<b>Product Name:</b>
-						<input
-							type='text'
-							placeholder='Product Name'
-							id='product'
-							name='product'
-							required
-							value={productName}
-							onChange={(e) => setProductName(e.target.value)}
-						/>
-					</label>
+					<div className='flex justify-between items-center'>
+						<label htmlFor='product'>
+							<b>Product Name:</b>
+							<input
+								type='text'
+								placeholder='Product Name'
+								id='product'
+								name='product'
+								required
+								value={productName}
+								onChange={(e) => setProductName(e.target.value)}
+							/>
+						</label>
+						<label htmlFor='brand'>
+							<b>Brand Name:</b>
+							<select
+								className='text-center'
+								placeholder='Brand Name'
+								id='brand'
+								name='brand'
+								required
+								value={brandId}
+								onChange={(e) => setBrandId(e.target.value)}>
+								{fetchedBrands &&
+									fetchedBrands.map((brand) => (
+										<option key={brand.id} value={brand.brandName}>
+											{brand.brandName}
+										</option>
+									))}
+							</select>
+						</label>
+					</div>
 					<label htmlFor='description'>
 						<b>Description:</b>
 						<textarea

@@ -2,6 +2,7 @@ import Image from 'next/image';
 import React, { SyntheticEvent, useState } from 'react';
 import Spiner from './Spiner';
 import { useRouter } from 'next/router';
+import { makeApiRequest } from '@/utils/apiRequests';
 
 export interface brandTypes {
 	id?: string;
@@ -56,42 +57,36 @@ const BrandForm: React.FC<brandTypes> = ({
 		};
 		try {
 			if (id) {
-				const brandResponse = await fetch(`/api/brands/edit-delete/${id}`, {
-					method: 'PUT',
-					body: JSON.stringify({ ...brandData, id }),
-					headers: { 'Content-Type': 'application/json' },
-				});
-				if (brandResponse.ok) {
-					const data = await brandResponse.json();
-				}
+				const updateBrand = await makeApiRequest(
+					`/api/brands/edit-delete/${id}`,
+					'PUT',
+					{
+						...brandData,
+						id,
+					}
+				);
 			} else {
-				const response = await fetch('/api/upload/image', {
-					method: 'POST',
-					body: JSON.stringify({ data: image }),
-					headers: { 'Content-Type': 'application/json' },
-				});
-				if (response.ok) {
-					const data = await response.json();
+				const addImageToCloudinary = await makeApiRequest(
+					'/api/upload/image',
+					'POST',
+					{
+						data: image,
+					}
+				);
+				const public_id = addImageToCloudinary.public_id;
+				brandData.public_id = public_id;
+				setPublic_id(public_id as string);
 
-					const public_id = data.public_id;
-					brandData.public_id = public_id;
-					setPublic_id(public_id as string);
+				brandData.id = self.crypto.randomUUID();
+				const brandId = brandData?.id;
+				setId(brandId);
 
-					brandData.id = self.crypto.randomUUID();
-					const id = brandData?.id;
-					setId(id);
-				}
-				const brandResponse = await fetch('/api/upload/brand', {
-					method: 'POST',
-					body: JSON.stringify({ data: brandData }),
-					headers: { 'Content-Type': 'application/json' },
+				const addNewBrand = await makeApiRequest('/api/upload/brand', 'POST', {
+					data: brandData,
 				});
-				if (brandResponse.ok) {
-					await brandResponse.json();
-				}
 			}
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 		} finally {
 			setId('');
 			setBrandName('');
@@ -100,7 +95,11 @@ const BrandForm: React.FC<brandTypes> = ({
 			setImageState('');
 			setIsLoading(false);
 
-			router.push('/brands');
+			if (!id) {
+				router.reload();
+			} else {
+				router.push('/brands');
+			}
 		}
 	};
 
@@ -142,6 +141,7 @@ const BrandForm: React.FC<brandTypes> = ({
 										quality={75}
 										width={120}
 										height={120}
+										className='h-auto'
 									/>
 								) : (
 									<>

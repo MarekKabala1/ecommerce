@@ -1,25 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import Layout from '@/components/Layout';
 import BrandForm, { brandTypes } from '@/components/BrandForm';
 import { FetchedBrand } from './api/brands/getBrands';
-import Link from 'next/link';
+import { fetchData } from '@/utils/apiRequests';
 
 const Brand: React.FC<brandTypes> = () => {
-	const [fetchedBrands, setFetchedBrands] = useState<Array<FetchedBrand>>();
+	const [fetchedBrands, setFetchedBrands] = useState<Array<FetchedBrand>>([]);
 	const [isLoading, setIsLoading] = useState(false);
 
-	const getBrands = async () => {
-		setIsLoading(true);
-		await fetch('api/brands/getBrands').then(async (response) => {
-			if (response.ok) {
-				const data: Array<FetchedBrand> = await response.json();
-				setFetchedBrands(data);
-				setIsLoading(false);
-			}
-		});
-	};
 	useEffect(() => {
-		getBrands();
+		fetchData(setFetchedBrands, setIsLoading, 'brands');
 	}, []);
 
 	return (

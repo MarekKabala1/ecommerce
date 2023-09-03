@@ -20,7 +20,7 @@ This is a simple admin page for eCommece built with Next.js, TailwindCSS, Planet
 
 ## **Features**
 - **Product Management:** Easily add, edit, and delete products in your inventory.
-- **Categorization:** Categorize your products into various categories for organized management.
+- **Categorization:** Categorize your products into various categorys for organized management.
 - **Branding:** Assign specific brands to products to enhance brand recognition.
 - **Order Tracking:** Monitor and manage orders with a user-friendly order tracking system.
 
