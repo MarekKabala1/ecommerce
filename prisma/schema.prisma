@@ -73,11 +73,12 @@ model Products {
   brandId     String?
   orderItems  OrderItem[]
 
-  brand     Brand?     @relation(fields: [brandId], references: [id])
-  categorys Category[]
+  brand     Brand?    @relation(fields: [brandId], references: [id])
+  categorys Category? @relation(fields: [categoryId], references: [id])
 
   @@index([productName])
   @@index([brandId])
+  @@index([categoryId])
 }
 
 model Category {

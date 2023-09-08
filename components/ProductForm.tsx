@@ -1,60 +1,75 @@
-import React, { SyntheticEvent, useEffect, useState } from 'react';
-import Image from 'next/image';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
+import { fetchData, makeApiRequest } from '@/utils/apiRequests';
 import Spiner from '@/components/Spiner';
-import { fetchData } from '@/utils/apiRequests';
 import { FetchedBrand } from '@/pages/api/brands/getBrands';
 import { FetchedCategory } from '@/pages/api/categorys/getCategorys';
 
-export interface productData {
+export interface Product {
 	id?: string;
 	productName?: string;
-	category?: string;
-	brandId?: string;
+	categoryId?: string | undefined | null;
+	brandId?: string | undefined | null;
 	description?: string;
-	imageUrl?: string;
-	image?: string;
-	public_id?: string;
+	imageUrl?: string | undefined;
+	public_id?: string | undefined;
 	isFeatured?: boolean;
 	isArchived?: boolean;
 	price?: number;
 	quantity?: number;
 }
+export interface ProductFormProps {
+	existingProduct?: Product;
+	image?: string;
+}
 
-const ProductForm: React.FC<productData> = ({
-	id: existingId,
-	productName: existingProductName,
-	category: existingCategory,
-	brandId: existingBrandId,
-	description: existingDescription,
-	imageUrl: existingImageUrl,
-	image: existingImage,
-	public_id: existingpublic_id,
-	isFeatured: existingIsFeatured,
-	isArchived: existingIsArchived,
-	price: existingPrice,
-	quantity: existingQuantity,
-}) => {
-	const [id, setId] = useState(existingId || '');
-	const [productName, setProductName] = useState(existingProductName || '');
-	const [category, setCategory] = useState(existingCategory || '');
-	const [brandId, setBrandId] = useState(existingBrandId || '');
-	const [description, setDescription] = useState(existingDescription || '');
-	const [imageUrl, setImageUrl] = useState(existingImageUrl || '');
-	const [image, setImage] = useState(existingImage || '');
-	const [imageState, setImageState] = useState('');
-	const [public_id, setPublic_id] = useState(existingpublic_id || '');
-	const [isFeatured, setisFeatured] = useState(existingIsFeatured || false);
-	const [isArchived, setisArchived] = useState(existingIsArchived || false);
-	const [price, setPrice] = useState<number>(existingPrice || 0);
-	const [quantity, setQuantity] = useState<number>(existingQuantity || 0);
-	const [fetchedBrands, setFetchedBrands] = useState<Array<FetchedBrand>>([]);
-	const [fetchedCategorys, setFetchedCategorys] = useState<
-		Array<FetchedCategory>
-	>([]);
+const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
+	const [product, setProduct] = useState<Product>({
+		id: '',
+		productName: '',
+		categoryId: '',
+		brandId: '',
+		description: '',
+		imageUrl: '',
+		public_id: '',
+		isFeatured: false,
+		isArchived: false,
+		price: 0,
+		quantity: 0,
+	});
+	const [fetchedBrands, setFetchedBrands] = useState<FetchedBrand[]>([]);
+	const [fetchedCategories, setFetchedCategories] = useState<FetchedCategory[]>(
+		[]
+	);
+	const [image, setImage] = useState(existingProduct || '');
 	const [isLoading, setIsLoading] = useState(false);
 
 	const router = useRouter();
+	const { id } = router.query;
+
+	useEffect(() => {
+		// Fetch brands and categories here
+		fetchData(setFetchedBrands, setIsLoading, 'brands');
+		fetchData(setFetchedCategories, setIsLoading, 'categorys');
+
+		if (existingProduct) {
+			setProduct({
+				id: existingProduct.id || '',
+				productName: existingProduct.productName || '',
+				categoryId: existingProduct.categoryId || '',
+				brandId: existingProduct.brandId || '',
+				description: existingProduct.description || '',
+				imageUrl: existingProduct.imageUrl || '',
+				public_id: existingProduct.public_id || '',
+				isFeatured: existingProduct.isFeatured || false,
+				isArchived: existingProduct.isArchived || false,
+				price: existingProduct.price || 0,
+				quantity: existingProduct.quantity || 0,
+			});
+			setImage(existingProduct.imageUrl || '');
+		}
+	}, []);
 
 	const handleImageInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (!e.target || !e.target.files || e.target.files.length === 0) {
@@ -62,7 +77,6 @@ const ProductForm: React.FC<productData> = ({
 		}
 		const file = e.target?.files[0];
 		previewFile(file);
-		setImageState(e.target.value);
 	};
 
 	const previewFile = (file: File) => {
@@ -70,39 +84,34 @@ const ProductForm: React.FC<productData> = ({
 		reader.readAsDataURL(file);
 		reader.onloadend = () => {
 			if (reader.result && typeof reader.result === 'string') {
+				// Update the imageUrl property of the product state
 				setImage(reader.result);
 			}
 		};
 	};
-	useEffect(() => {
-		fetchData(setFetchedBrands, setIsLoading, 'brands');
-		fetchData(setFetchedCategorys, setIsLoading, 'categorys');
-	}, []);
 
-	const SubmitProduct = async (e: SyntheticEvent) => {
+	const handleInputChange = (
+		e: React.ChangeEvent<
+			HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+		>
+	) => {
+		const { name, value, type } = e.target;
+		const numericValue = type === 'number' ? parseFloat(value) : value;
+		setProduct({ ...product, [name]: numericValue });
+		// setProduct({ ...product, [name]: value });
+	};
+
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsLoading(true);
 
-		const productData: productData = {
-			id,
-			productName,
-			description,
-			imageUrl,
-			category,
-			price: !isNaN(price) ? price : 0,
-			public_id,
-			quantity: !isNaN(quantity) ? quantity : 0,
-		};
 		try {
 			if (id) {
-				const productResponse = await fetch(`/api/product/edit-delete/${id}`, {
+				const editProduct = await fetch(`/api/product/edit-delete/${id}`, {
 					method: 'PUT',
-					body: JSON.stringify({ ...productData, id }),
+					body: JSON.stringify({ ...product, id }),
 					headers: { 'Content-Type': 'application/json' },
 				});
-				if (productResponse.ok) {
-					const data = await productResponse.json();
-				}
 			} else {
 				const response = await fetch('/api/upload/image', {
 					method: 'POST',
@@ -112,133 +121,127 @@ const ProductForm: React.FC<productData> = ({
 				if (response.ok) {
 					const data = await response.json();
 
-					const imgUrl = data.imageUrl;
-					const public_id = data.public_id;
+					product.imageUrl = data.imageUrl;
+					product.public_id = data.public_id;
 					let fullId = data.cludinary_id;
-					let id = fullId.slice(14);
-					productData.imageUrl = imgUrl as string;
-					productData.id = id;
-					productData.public_id = public_id;
+					product.id = fullId.slice(14);
 
-					setImageUrl(imgUrl as string);
-					setPublic_id(public_id as string);
-					setId(id);
-
+					setProduct({
+						...product,
+						imageUrl: product.imageUrl as string,
+						public_id: product.public_id as string,
+						id: product.id as string,
+					});
 					const productResponse = await fetch('/api/upload/product', {
 						method: 'POST',
-						body: JSON.stringify({ data: productData }),
 						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ data: product }),
 					});
 					if (productResponse.ok) {
 						await productResponse.json();
+					} else {
+						// router.push('/products');
+						console.error(productResponse.text());
 					}
 				}
 			}
-		} catch (err) {
-			console.error(err);
+		} catch (error) {
+			console.error('Error:', error);
 		} finally {
-			setId('');
-			setDescription('');
-			setPrice(0);
-			setProductName('');
-			setCategory('---Choose a category---');
-			setImage('');
 			setIsLoading(false);
-
-			router.push('/products');
+			setProduct({
+				id: '',
+				productName: '',
+				categoryId: '',
+				brandId: '',
+				description: '',
+				imageUrl: '',
+				public_id: '',
+				isFeatured: false,
+				isArchived: false,
+				price: 0,
+				quantity: 0,
+			});
+			setImage('');
 		}
 	};
+
 	return (
-		<>
+		<div>
 			{isLoading ? (
 				<Spiner />
 			) : (
-				<form
-					onSubmit={SubmitProduct}
-					className='max-w-lg mx-auto border-t p-3 border-gray-200  '>
-					<label htmlFor='category'>
-						<b>categorys:</b>
+				<form onSubmit={handleSubmit} className='max-w-lg mx-auto '>
+					<label>
+						Category:
 						<select
-							className='text-center'
-							name='category'
-							id='category'
-							value={category}
-							required
-							onChange={(e) => setCategory(e.target.value)}>
-							{fetchedCategorys &&
-								fetchedCategorys.map((category) => (
-									<option key={category.id} value={category.categoryName}>
-										{category.categoryName}
-									</option>
-								))}
+							name='categoryId'
+							value={product.categoryId as string}
+							onChange={handleInputChange}
+							required>
+							<option value=''>Select a Category</option>
+							{fetchedCategories.map((category) => (
+								<option key={category.id} value={category.id}>
+									{category.categoryName}
+								</option>
+							))}
 						</select>
 					</label>
 					<div className='flex justify-between items-center'>
-						<label htmlFor='product'>
-							<b>Product Name:</b>
+						<label>
+							Product Name:
 							<input
 								type='text'
-								placeholder='Product Name'
-								id='product'
-								name='product'
+								name='productName'
+								value={product.productName}
+								onChange={handleInputChange}
 								required
-								value={productName}
-								onChange={(e) => setProductName(e.target.value)}
 							/>
 						</label>
-						<label htmlFor='brand'>
-							<b>Brand Name:</b>
+						<label>
+							Brand:
 							<select
-								className='text-center'
-								placeholder='Brand Name'
-								id='brand'
-								name='brand'
-								required
-								value={brandId}
-								onChange={(e) => setBrandId(e.target.value)}>
-								{fetchedBrands &&
-									fetchedBrands.map((brand) => (
-										<option key={brand.id} value={brand.brandName}>
-											{brand.brandName}
-										</option>
-									))}
+								name='brandId'
+								value={product.brandId as string}
+								onChange={handleInputChange}
+								required>
+								<option value=''>Select a Brand</option>
+								{fetchedBrands.map((brand) => (
+									<option key={brand.id} value={brand.id}>
+										{brand.brandName}
+									</option>
+								))}
 							</select>
 						</label>
 					</div>
-					<label htmlFor='description'>
-						<b>Description:</b>
+					<label>
+						Description:
 						<textarea
-							placeholder='Description'
-							id='description'
 							name='description'
+							value={product.description}
+							onChange={handleInputChange}
 							required
-							value={description}
-							onChange={(e) => setDescription(e.target.value)}
 						/>
 					</label>
 					<div className='flex justify-between items-center'>
-						<label htmlFor='price' className='w-20'>
-							<b>Price in £</b>
+						<label>
+							Price:
 							<input
 								type='number'
-								placeholder='Price'
-								id='price'
 								name='price'
+								value={product.price as number}
+								onChange={handleInputChange}
 								required
-								step={0.1}
-								value={price.toString()}
-								onChange={(e) => setPrice(parseFloat(e.target.value))}
 							/>
 						</label>
-						<label htmlFor='quantity' className='w-20'>
-							<b>Quantity</b>
+						<label>
+							Quantity:
 							<input
 								type='number'
-								placeholder='Quantity'
-								id='quantity'
 								name='quantity'
-								value={quantity.toString()}
-								onChange={(e) => setQuantity(parseInt(e.target.value))}
+								value={product.quantity as number}
+								onChange={handleInputChange}
+								required
 							/>
 						</label>
 					</div>
@@ -264,14 +267,14 @@ const ProductForm: React.FC<productData> = ({
 								onChange={handleImageInput}
 							/>
 						</label>
-						<button className='btn-primary text-xs p-4'>
+						<button className='btn-primary text-xs p-4' type='submit'>
 							{id ? 'Update Product' : 'Add Product'}
 						</button>
 					</div>
 					<div className=' h-32 w-32 mt-2 relative text-center'>
 						{image ? (
 							<Image
-								src={image}
+								src={image as string}
 								fill
 								alt='Product Image'
 								unoptimized={true}
@@ -284,7 +287,7 @@ const ProductForm: React.FC<productData> = ({
 					</div>
 				</form>
 			)}
-		</>
+		</div>
 	);
 };
 

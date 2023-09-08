@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@/lib/prisma';
-import { productData } from '@/components/ProductForm';
+import { Product } from '@/components/ProductForm';
 
-interface Data extends productData {
+interface Data extends Product {
+  [x: string]: any;
   message?: string;
   products?: Data;
 }
@@ -49,16 +50,27 @@ export default async function handler(
         return;
       }
 
-      const updatedData = req.body;
+      if ((existingProduct.categoryId === null || existingProduct.categoryId === undefined) &&
+        (existingProduct.brandId === null || existingProduct.brandId === undefined)) {
+        throw new Error('Error selecting Category or Brand');
+      }
+      if (!id || id === undefined) {
+        throw new Error('Something went wrrong try again')
+      }
+
+      const updatedData = req.body.product
       const updatedProduct = await prisma.products.update({
         where: { id: id.toString() },
         data: {
-          category: updatedData.category || existingProduct.category,
+          id: updatedData.id || existingProduct.id,
           productName: updatedData.productName || existingProduct.productName,
+          categoryId: updatedData.category || existingProduct.categoryId,
+          brandId: updatedData.brandId || existingProduct.brandId,
           description: updatedData.description || existingProduct.description,
-          price: updatedData.price || existingProduct.price,
           imageUrl: updatedData.imageUrl || existingProduct.imageUrl,
+          price: updatedData.price || existingProduct.price,
           quantity: updatedData.quantity || existingProduct.quantity,
+
         },
       });
 

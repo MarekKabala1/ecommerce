@@ -109,9 +109,7 @@ const BrandForm: React.FC<brandTypes> = ({
 				<Spiner />
 			) : (
 				<>
-					<h1 className='header text-center mb-4'>
-						{id ? 'Edit Brand' : 'Add Brand'}
-					</h1>
+					<h1 className='header'>{id ? 'Edit Brand' : 'Add Brand'}</h1>
 					<form
 						className='flex flex-col  justify-center gap-3 mb-8'
 						onSubmit={addBrand}>

@@ -23,6 +23,9 @@ body,
 .btn-red {
 	@apply bg-red-500  border border-red-500 rounded-lg  px-5 text-gray-200  font-semibold;
 }
+.btn-secondary {
+	@apply bg-gray-100 border border-gray-200 rounded-lg py-1 px-2 text-gray-800 font-semibold text-xs md:text-sm md:px-5;
+}
 
 label {
 	@apply px-1;
@@ -32,6 +35,9 @@ input,
 textarea,
 select {
 	@apply text-sm bg-gray-200 border text-gray-700 border-gray-400 p-1 rounded-md w-full mb-2;
+}
+form {
+	@apply pt-5;
 }
 
 input:focus,
@@ -43,10 +49,10 @@ textarea::placeholder {
 	@apply text-gray-700 text-xs p-1 opacity-30;
 }
 .header {
-	@apply text-center text-gray-700 text-xl mb-2;
+	@apply text-center text-gray-700 text-xl border-b p-3 border-gray-200;
 }
 table.basic {
-	@apply m-auto bg-gray-200 rounded-sm shadow-md;
+	@apply mx-auto my-5 bg-gray-200 rounded-sm shadow-md pt-5;
 }
 table.basic thead tr td,
 table.basic thead tr th {

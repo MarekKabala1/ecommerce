@@ -64,7 +64,7 @@ const CategoryForm: React.FC<categoryTypes> = ({
 
 	return (
 		<>
-			<h1 className='heade text-center mb-4'>Category Page</h1>
+			<h1 className='header'>Category Page</h1>
 			<form
 				className='flex flex-col items-center justify-center mb-8'
 				onSubmit={addCategory}>
