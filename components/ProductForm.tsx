@@ -109,7 +109,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
 			if (id) {
 				const editProduct = await fetch(`/api/product/edit-delete/${id}`, {
 					method: 'PUT',
-					body: JSON.stringify({ ...product, id }),
+					body: JSON.stringify({ ...product }),
 					headers: { 'Content-Type': 'application/json' },
 				});
 			} else {
@@ -162,6 +162,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
 				price: 0,
 				quantity: 0,
 			});
+			router.push('/products');
 			setImage('');
 		}
 	};

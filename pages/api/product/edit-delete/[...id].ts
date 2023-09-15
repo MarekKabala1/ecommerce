@@ -58,18 +58,20 @@ export default async function handler(
         throw new Error('Something went wrrong try again')
       }
 
-      const updatedData = req.body.product
+      const updatedData = req.body
       const updatedProduct = await prisma.products.update({
         where: { id: id.toString() },
         data: {
           id: updatedData.id || existingProduct.id,
           productName: updatedData.productName || existingProduct.productName,
-          categoryId: updatedData.category || existingProduct.categoryId,
+          categoryId: updatedData.categoryId || existingProduct.categoryId,
           brandId: updatedData.brandId || existingProduct.brandId,
           description: updatedData.description || existingProduct.description,
           imageUrl: updatedData.imageUrl || existingProduct.imageUrl,
           price: updatedData.price || existingProduct.price,
           quantity: updatedData.quantity || existingProduct.quantity,
+          isFeatured: updatedData.isFeatured || existingProduct.isFeatured,
+          isArchived: updatedData.isArchived || existingProduct.isArchived,
 
         },
       });
