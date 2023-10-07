@@ -78,7 +78,7 @@ const EditProduct = () => {
 			</button>
 			<h1 className='header'>Edit Product</h1>
 			{productToEdit && imageUrl && (
-				<ProductForm existingProduct={productToEdit} />
+				<ProductForm existingProduct={productToEdit} image={imageUrl} />
 			)}
 		</Layout>
 	);

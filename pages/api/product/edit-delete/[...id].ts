@@ -70,12 +70,11 @@ export default async function handler(
           imageUrl: updatedData.imageUrl || existingProduct.imageUrl,
           price: updatedData.price || existingProduct.price,
           quantity: updatedData.quantity || existingProduct.quantity,
-          isFeatured: updatedData.isFeatured || existingProduct.isFeatured,
-          isArchived: updatedData.isArchived || existingProduct.isArchived,
+          isFeatured: updatedData.isFeatured,
+          isArchived: updatedData.isArchived,
 
         },
       });
-
       res.status(200).json(updatedProduct);
     } catch (err) {
       res.status(500).json({ message: 'Error updating product' });

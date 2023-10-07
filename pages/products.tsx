@@ -44,7 +44,7 @@ const Products: React.FC<fetchedProduct> = () => {
 				</>
 			) : (
 				<>
-					<div className='text-left'>
+					<div className='text-right'>
 						<Link className=' btn-primary' href={'/products/new'}>
 							Add new product
 						</Link>
@@ -112,7 +112,7 @@ const Products: React.FC<fetchedProduct> = () => {
 								))
 							) : (
 								<tr>
-									<td>No products nto show!!!</td>
+									<td>No products to show!!!</td>
 								</tr>
 							)}
 						</tbody>

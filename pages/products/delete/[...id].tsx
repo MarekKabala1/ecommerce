@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '@/components/Layout';
-import { productData } from '@/components/ProductForm';
+import { Product } from '@/components/ProductForm';
 import Spiner from '@/components/Spiner';
 
 const DeleteProductPage = () => {
 	const router = useRouter();
-	const [productInfo, setProductInfo] = useState<productData>();
+	const [productInfo, setProductInfo] = useState<Product>();
 	const [imageUrl, setImageUrl] = useState<string>('');
 	const [public_id, setPublic_Id] = useState<string>();
 	const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +29,7 @@ const DeleteProductPage = () => {
 				});
 
 				if (response.ok) {
-					const productData: productData = await response.json();
+					const productData: Product = await response.json();
 					const url = productData.imageUrl;
 					const public_id = productData.public_id;
 					setProductInfo(productData);

@@ -1,19 +1,23 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { productData } from '@/components/ProductForm';
 import prisma from '@/lib/prisma';
 
-interface Data extends productData {
+interface Data {
   message?: string;
   products?: Data[];
 }
 
 type fetchedProduct = {
   id: string;
-  productName: string;
   description: string;
-  imageUrl: string;
-  category: string;
   price: number;
+  imageUrl: string;
+  productName: string;
+  quantity: number;
+  isFeatured: boolean;
+  isArchived: boolean;
+  public_id: string;
+  categoryId: string | null;
+  brandId: string | null;
 };
 
 export default async function handler(

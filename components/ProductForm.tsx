@@ -42,7 +42,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
 	const [fetchedCategories, setFetchedCategories] = useState<FetchedCategory[]>(
 		[]
 	);
-	const [image, setImage] = useState(existingProduct || '');
+	const [image, setImage] = useState<string | undefined>(
+		existingProduct?.imageUrl || ''
+	);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const router = useRouter();
@@ -69,7 +71,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
 			});
 			setImage(existingProduct.imageUrl || '');
 		}
-	}, []);
+	}, [existingProduct]);
 
 	const handleImageInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (!e.target || !e.target.files || e.target.files.length === 0) {
@@ -95,10 +97,16 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
 			HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
 		>
 	) => {
-		const { name, value, type } = e.target;
-		const numericValue = type === 'number' ? parseFloat(value) : value;
-		setProduct({ ...product, [name]: numericValue });
-		// setProduct({ ...product, [name]: value });
+		const { name, value, type, checked } = e.target as HTMLInputElement;
+
+		if (type === 'checkbox') {
+			setProduct({ ...product, [name]: checked });
+			console.log(checked);
+		} else {
+			const numericValue = type === 'number' ? parseFloat(value) : value;
+
+			setProduct({ ...product, [name]: numericValue });
+		}
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -107,42 +115,42 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
 
 		try {
 			if (id) {
-				const editProduct = await fetch(`/api/product/edit-delete/${id}`, {
-					method: 'PUT',
-					body: JSON.stringify({ ...product }),
-					headers: { 'Content-Type': 'application/json' },
-				});
+				const editProduct = await makeApiRequest(
+					`/api/product/edit-delete/${id}`,
+					'PUT',
+					{ ...product }
+				);
 			} else {
-				const response = await fetch('/api/upload/image', {
-					method: 'POST',
-					body: JSON.stringify({ data: image }),
-					headers: { 'Content-Type': 'application/json' },
-				});
-				if (response.ok) {
-					const data = await response.json();
-
-					product.imageUrl = data.imageUrl;
-					product.public_id = data.public_id;
-					let fullId = data.cludinary_id;
-					product.id = fullId.slice(14);
-
-					setProduct({
-						...product,
-						imageUrl: product.imageUrl as string,
-						public_id: product.public_id as string,
-						id: product.id as string,
-					});
-					const productResponse = await fetch('/api/upload/product', {
-						method: 'POST',
-						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify({ data: product }),
-					});
-					if (productResponse.ok) {
-						await productResponse.json();
-					} else {
-						// router.push('/products');
-						console.error(productResponse.text());
+				const addImageToCloudinary = await makeApiRequest(
+					'/api/upload/image',
+					'POST',
+					{
+						data: image,
 					}
+				);
+
+				product.imageUrl = addImageToCloudinary.imageUrl;
+				product.public_id = addImageToCloudinary.public_id;
+				let fullId = addImageToCloudinary.cludinary_id;
+				product.id = fullId.slice(14);
+
+				setProduct({
+					...product,
+					imageUrl: product.imageUrl as string,
+					public_id: product.public_id as string,
+					id: product.id as string,
+				});
+				const productResponse = await makeApiRequest(
+					'/api/upload/product',
+					'POST',
+					{ data: product }
+				);
+				if (productResponse.ok) {
+					await productResponse.json();
+					console.log(productResponse);
+				} else {
+					// router.push('/products');
+					console.error(productResponse.text());
 				}
 			}
 		} catch (error) {
@@ -245,6 +253,17 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
 								required
 							/>
 						</label>
+					</div>
+					<div className='w-32 flex flex-row  align-center p p-1'>
+						<label htmlFor='isFeatured'>Featured:</label>
+						<input
+							// className='m-0 w-4'
+							type='checkbox'
+							name='isFeatured'
+							checked={product.isFeatured}
+							id='isFeatured '
+							onChange={handleInputChange}
+						/>
 					</div>
 					<div className='flex justify-between mt-2'>
 						<label className='btn-primary max-w-fit px-4 cursor-pointer text-center flex  items-center justify-center text-xs gap-1 '>

@@ -18,10 +18,6 @@ export default async function handler(
   if (req.method === 'POST') {
     try {
       const data: Data = req.body.data
-
-      console.log(`this is 1 : ${req.body.data}`);
-      console.log(`this is data 2 :${data}`);
-
       if (data === undefined) {
         return undefined
       }
@@ -55,7 +51,6 @@ export default async function handler(
       })
 
       res.status(200).json(result)
-      console.log(`this is res and data 3: ${result} ,${data}`)
     } catch (err) {
       // Handle error and send an error response if needed
       res.status(500).json({ message: 'Error creating product' });
