@@ -6,7 +6,7 @@ interface Data {
   products?: Data[];
 }
 
-type fetchedProduct = {
+export type fetchedProduct = {
   id: string;
   description: string;
   price: number;

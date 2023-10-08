@@ -86,7 +86,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
 		reader.readAsDataURL(file);
 		reader.onloadend = () => {
 			if (reader.result && typeof reader.result === 'string') {
-				// Update the imageUrl property of the product state
 				setImage(reader.result);
 			}
 		};
@@ -101,11 +100,29 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
 
 		if (type === 'checkbox') {
 			setProduct({ ...product, [name]: checked });
-			console.log(checked);
 		} else {
-			const numericValue = type === 'number' ? parseFloat(value) : value;
+			let numericValue: string | number;
 
-			setProduct({ ...product, [name]: numericValue });
+			if (type === 'number') {
+				numericValue = parseFloat(value);
+			} else {
+				numericValue = value;
+			}
+
+			if (numericValue === '' || !isNaN(numericValue as number)) {
+				// Check if the input is 'quantity' and the value is greater than or equal to 0
+				if (name === 'quantity' && (numericValue as number) >= 0) {
+					setProduct({
+						...product,
+						[name]: numericValue as number,
+						isArchived: numericValue === 0,
+					});
+				} else {
+					setProduct({ ...product, [name]: numericValue });
+				}
+			} else {
+				setProduct({ ...product, [name]: value });
+			}
 		}
 	};
 
@@ -145,13 +162,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
 					'POST',
 					{ data: product }
 				);
-				if (productResponse.ok) {
-					await productResponse.json();
-					console.log(productResponse);
-				} else {
-					// router.push('/products');
-					console.error(productResponse.text());
-				}
 			}
 		} catch (error) {
 			console.error('Error:', error);
@@ -238,7 +248,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
 							<input
 								type='number'
 								name='price'
-								value={product.price as number}
+								value={product?.price || 0}
 								onChange={handleInputChange}
 								required
 							/>
@@ -248,7 +258,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
 							<input
 								type='number'
 								name='quantity'
-								value={product.quantity as number}
+								value={product.quantity || 0}
 								onChange={handleInputChange}
 								required
 							/>
@@ -257,7 +267,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ existingProduct }) => {
 					<div className='w-32 flex flex-row  align-center p p-1'>
 						<label htmlFor='isFeatured'>Featured:</label>
 						<input
-							// className='m-0 w-4'
+							className='m-0 w-4'
 							type='checkbox'
 							name='isFeatured'
 							checked={product.isFeatured}

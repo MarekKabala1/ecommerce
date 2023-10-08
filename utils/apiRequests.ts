@@ -17,7 +17,7 @@ export const makeApiRequest = async (url: string, method: string, data?: any) =>
 };
 
 export const fetchData = async (
-  setFetchedData: (data: any) => void,
+  setFetchedData: (data: any | []) => void,
   setLoading: (isLoading: boolean) => void,
   dataType: 'brands' | 'categorys' | 'products'
 ) => {
@@ -34,8 +34,9 @@ export const fetchData = async (
         apiUrl = '/api/categorys/getCategorys';
         break;
       case 'products':
-        apiUrl = '/api/products/getProducts';
+        apiUrl = '/api/product/getProducts';
         break;
+
       default:
         throw new Error(`Invalid data type: ${dataType}`);
     }
