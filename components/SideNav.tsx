@@ -17,7 +17,7 @@ const Nav = () => {
 	};
 
 	return (
-		<nav className=' flex flex-col gap-4 text-gray-700 px-8 text-xs border-r my-5 border-gray-300  '>
+		<nav className=' flex flex-col gap-4 text-gray-700 px-8 text-xs border-r mt-5 border-gray-300  '>
 			<Link href={'/'} className={pathname === '/' ? activeLink : inActiveLink}>
 				<svg
 					xmlns='http://www.w3.org/2000/svg'

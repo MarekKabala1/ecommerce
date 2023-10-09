@@ -9,10 +9,10 @@ export default function Layout({ children }: PropsWithChildren) {
 		return (
 			<>
 				<TopNav />
-				<main className=' bg-white border border-gray-300 rounded-xl flex flex-col flex-grow h-max mx-auto my-3 w-full sm:min-w-fit md:max-w-2xl lg:max-w-4xl'>
-					<section className='flex h-screen w-full'>
+				<main className=' bg-white border border-gray-300 rounded-xl flex flex-col flex-grow h-max mx-auto my-5 w-full sm:min-w-fit md:max-w-2xl lg:max-w-4xl'>
+					<section className='flex mb-4 h-fit w-full'>
 						<SideNav />
-						<article className='bg-white  h-5/6 text-gray-700 flex-grow p-4 '>
+						<article className='bg-white text-gray-700 flex-grow p-2 '>
 							{children}
 						</article>
 					</section>
