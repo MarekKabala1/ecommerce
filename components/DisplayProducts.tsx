@@ -1,5 +1,6 @@
 import { fetchedProduct } from '@/pages/api/product/getProducts';
 import Link from 'next/link';
+import SearchBox from './SearchBox';
 
 const DisplayProducts: React.FC<{ products: fetchedProduct[] }> = ({
 	products,

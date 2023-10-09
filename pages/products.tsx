@@ -11,15 +11,23 @@ const Products: React.FC<fetchedProduct> = () => {
 	const [fetchedProducts, setFetchedProducts] = useState<Array<fetchedProduct>>(
 		[]
 	);
+	const [filteredProducts, setFilteredProducts] = useState<
+		Array<fetchedProduct>
+	>([]);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const getProducts = async () => {
 		setIsLoading(true);
 		await fetchData(setFetchedProducts, setIsLoading, 'products');
 	};
+
 	useEffect(() => {
 		getProducts();
 	}, []);
+
+	const handleFilterChange = (filteredData: fetchedProduct[]) => {
+		setFilteredProducts(filteredData);
+	};
 
 	return (
 		<Layout>
@@ -33,13 +41,20 @@ const Products: React.FC<fetchedProduct> = () => {
 			) : (
 				<>
 					<div className='flex justify-between items-center'>
-						<SearchBox />
-						<Link className=' btn-primary' href={'/products/new'}>
+						<SearchBox
+							onFilterChange={handleFilterChange}
+							products={fetchedProducts}
+						/>
+						<Link className='btn-primary mt-4' href={'/products/new'}>
 							Add new product
 						</Link>
 					</div>
 					<h1 className='header'>Products</h1>
-					<DisplayProducts products={fetchedProducts || []} />
+					<DisplayProducts
+						products={
+							filteredProducts.length > 0 ? filteredProducts : fetchedProducts
+						}
+					/>
 				</>
 			)}
 		</Layout>

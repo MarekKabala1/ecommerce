@@ -1,31 +1,42 @@
+import React, { useState, useEffect } from 'react';
 import { fetchedProduct } from '@/pages/api/product/getProducts';
-import { useState } from 'react';
+import { brandTypes } from './BrandForm';
 
-export interface ProductFormProps {
-	data?: fetchedProduct[];
+interface SearchBoxProps {
+	onFilterChange: (filteredData: fetchedProduct[]) => void;
+	products: fetchedProduct[];
 }
-//TODO:IMPLEMENT A SERCH BAR IN FREE TIME
-const SearchBox: React.FC<ProductFormProps> = ({ data }) => {
+
+const SearchBox: React.FC<SearchBoxProps> = ({ onFilterChange, products }) => {
 	const [storedValue, setStoredValue] = useState('');
-	const [productData, setProductData] = useState<fetchedProduct>();
+
+	useEffect(() => {
+		const filteredData = products.filter((item) => {
+			return item.productName.toLowerCase().includes(storedValue);
+		});
+
+		onFilterChange(filteredData);
+	}, [storedValue, products]);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		var valueToLowerCase = e.target.value.toLowerCase();
-		setStoredValue(valueToLowerCase);
-		console.log(storedValue);
+		const value = e.target.value.toLowerCase();
+		setStoredValue(value);
 	};
+
 	return (
-		<div>
-			<label htmlFor='searchBox'>Search Product</label>
-			<input
-				type='text'
-				name='searchBox'
-				id='searchBox'
-				value={storedValue}
-				onChange={handleChange}
-				placeholder='Tap to search Product'
-			/>
-		</div>
+		<>
+			<div>
+				<label htmlFor='searchBox'>Search Product</label>
+				<input
+					type='text'
+					name='searchBox'
+					id='searchBox'
+					value={storedValue}
+					onChange={handleChange}
+					placeholder='Tap to search Product'
+				/>
+			</div>
+		</>
 	);
 };
 

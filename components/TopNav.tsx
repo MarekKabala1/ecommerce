@@ -5,7 +5,7 @@ import { useState } from 'react';
 const TopNav = () => {
 	const { data: session, status } = useSession();
 	const [isOpen, setIsOpen] = useState(false);
-	// console.log(session);
+	// console.log(session, status);
 
 	const toggleTheme = () => {
 		if (!isOpen) {
@@ -23,12 +23,12 @@ const TopNav = () => {
 				<div className='relative flex flex-col justify-center gap-2 items-end'>
 					<Link href={'/'} className='flex items-center  gap-2'>
 						<p>{session.user?.name}</p>
-
 						{session.user?.image ? (
 							// eslint-disable-next-line @next/next/no-img-element
 							<img
 								src={session.user?.image}
 								alt=''
+								aria-hidden='true'
 								className='w-9 h-9 rounded-full'
 							/>
 						) : (
