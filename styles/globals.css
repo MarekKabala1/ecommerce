@@ -1,15 +1,13 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 html,
 body,
 :root {
 	height: 100%;
 }
+
 :root {
-	--bg_linearGradient: to top, #306ed4, #297dd6, #348bd5, #4998d2, #61a4cf,
-		#78aad0, #8cb0d1, #9db6d1, #acb8d2, #bdbdd3, #c8c2d3, #d2c9d4;
+	--bg_linearGradient: to top, #306ed4, #297dd6, #348bd5, #4998d2, #61a4cf, #78aad0, #8cb0d1, #9db6d1, #acb8d2, #bdbdd3, #c8c2d3, #d2c9d4;
 
 	--bg_lightsGradient: to top, #d1c8d3, #c5c0d3, #b3bbd3, #9db6d1, #83b2cb;
 	--bg_button: rgb(172, 184, 210);
